@@ -1,0 +1,2 @@
+# KinoCMS
+KinoCMS project
