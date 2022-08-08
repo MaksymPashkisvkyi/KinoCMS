@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CimenaConfig(AppConfig):
+class CinemaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'cimena'
+    name = 'cinema'
