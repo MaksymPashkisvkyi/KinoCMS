@@ -4,19 +4,22 @@ from .models import MainPageModel, PagesModel, ContactsModel, NewsPromoModel
 
 @admin.register(MainPageModel)
 class MainPageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'first_phone', 'second_phone']
 
 
 @admin.register(PagesModel)
 class PagesAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'description']
+    list_display_links = ['name']
 
 
 @admin.register(ContactsModel)
 class ContactsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'address', 'coords']
+    list_display_links = ['name']
 
 
 @admin.register(NewsPromoModel)
 class NewsPromoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'description', 'date']
+    list_display_links = ['name']

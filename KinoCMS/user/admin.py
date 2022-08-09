@@ -4,4 +4,5 @@ from .models import UserModel
 
 @admin.register(UserModel)
 class UserAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'surname', 'nickname', 'email', 'address', 'gender', 'phone', 'date', 'city']
+    list_display_links = ['name']
