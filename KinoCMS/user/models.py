@@ -2,19 +2,19 @@ from django.db import models
 
 
 class UserModel(models.Model):
-    name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
-    nickname = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Имя')
+    surname = models.CharField(max_length=50, verbose_name='Фамилия')
+    nickname = models.CharField(max_length=50, verbose_name='Ник')
     email = models.EmailField()
-    address = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    repeat_password = models.CharField(max_length=50)
-    card_number = models.CharField(max_length=50)
-    language = models.BooleanField()
-    gender = models.BooleanField()
-    phone = models.CharField(max_length=50)
-    data = models.DateField()
-    city = models.CharField(max_length=50, choices='')
+    address = models.CharField(max_length=50, verbose_name='Адрес')
+    password = models.CharField(max_length=50, verbose_name='Пароль')
+    repeat_password = models.CharField(max_length=50, verbose_name='Повторить пароль')
+    card_number = models.CharField(max_length=50, verbose_name='Номер карты')
+    language = models.BooleanField(verbose_name='Язык') # Русский / Украинский?
+    gender = models.BooleanField(verbose_name='Пол')
+    phone = models.CharField(max_length=50, verbose_name='Телефон')
+    date = models.DateField(verbose_name='Дата рождения')
+    city = models.CharField(max_length=50, verbose_name='Город')
 
     class Meta:
         verbose_name_plural = 'Клиенты'

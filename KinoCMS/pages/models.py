@@ -4,10 +4,10 @@ from cinema.models import SEOModel, GalleryModel
 
 
 class MainPageModel(models.Model):
-    first_phone = models.CharField(max_length=20)
-    second_phone = models.CharField(max_length=20)
-    seo_text = models.TextField()
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    first_phone = models.CharField(max_length=20, verbose_name='Первый телефон')
+    second_phone = models.CharField(max_length=20, verbose_name='Второй телефон')
+    seo_text = models.TextField(verbose_name='СЕО текст')
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
     class Meta:
         verbose_name_plural = 'Главная страница'
@@ -28,11 +28,11 @@ class PagesModel(models.Model):
 
 
 class ContactsModel(models.Model):
-    name = models.CharField(max_length=50)
-    address = models.TextField()
-    coords = models.CharField(max_length=50)
-    logo = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='contacts_logo')
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    name = models.CharField(max_length=50, verbose_name='Название')
+    address = models.TextField(verbose_name='Адрес')
+    coords = models.CharField(max_length=50, verbose_name='Координаты')
+    logo = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='contacts_logo', verbose_name='Лого')
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
     class Meta:
         verbose_name_plural = 'Контакты'
@@ -40,13 +40,15 @@ class ContactsModel(models.Model):
 
 
 class NewsPromoModel(models.Model):
-    name = models.CharField(max_length=50)
-    date = models.DateField()
-    description = models.TextField()
-    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='news_promo_main_image')
-    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='news_promo_gallery')
+    name = models.CharField(max_length=50, verbose_name='Название')
+    date = models.DateField(verbose_name='Дата')
+    description = models.TextField(verbose_name='Описание')
+    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='news_promo_main_image',
+                                   verbose_name='Главное изображение')
+    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='news_promo_gallery',
+                                verbose_name='Галерея')
     URL = models.URLField()
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
     class Meta:
         verbose_name_plural = 'Новости и Промо'

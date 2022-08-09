@@ -1,14 +1,13 @@
 from django.db import models
 
-
 from user.models import UserModel
 
 
 class SEOModel(models.Model):
     URL = models.URLField()
-    title = models.CharField(max_length=50)
-    keywords = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, verbose_name='Название')
+    keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
+    description = models.CharField(max_length=50, verbose_name='Описание')
 
     class Meta:
         verbose_name_plural = 'СЕО модели'
@@ -16,7 +15,7 @@ class SEOModel(models.Model):
 
 
 class GalleryModel(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(verbose_name='Изображение')
 
     class Meta:
         verbose_name_plural = 'Галерея'
@@ -56,15 +55,17 @@ class HallModel(models.Model):
 
 
 class FilmModel(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='film_main_image')
-    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='film_gallery')
+    name = models.CharField(max_length=50, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='film_main_image',
+                                   verbose_name='Главное изображение')
+    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='film_gallery',
+                                verbose_name='Галерея')
     URL = models.URLField()
-    three_D = models.BooleanField()
-    two_D = models.BooleanField()
+    three_D = models.BooleanField(verbose_name='3D')
+    two_D = models.BooleanField(verbose_name='2D')
     IMAX = models.BooleanField()
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
     class Meta:
         verbose_name_plural = 'Фильмы'
@@ -73,11 +74,11 @@ class FilmModel(models.Model):
 
 
 class SessionModel(models.Model):
-    film = models.ForeignKey(FilmModel, on_delete=models.PROTECT)
-    hall = models.ForeignKey(HallModel, on_delete=models.PROTECT)
-    price = models.SmallIntegerField()
-    time = models.TimeField()
-    three_D = models.BooleanField()
+    film = models.ForeignKey(FilmModel, on_delete=models.PROTECT, verbose_name='Фильм')
+    hall = models.ForeignKey(HallModel, on_delete=models.PROTECT, verbose_name='Зал')
+    price = models.SmallIntegerField(verbose_name='Стоимость')
+    time = models.TimeField(verbose_name='Время')
+    three_D = models.BooleanField(verbose_name='3D')
     DBOX = models.BooleanField()
     VIP = models.BooleanField()
 
@@ -87,10 +88,10 @@ class SessionModel(models.Model):
 
 
 class TicketModel(models.Model):
-    session = models.ForeignKey(SessionModel, on_delete=models.PROTECT)
-    user = models.ForeignKey(UserModel, on_delete=models.PROTECT)
-    seat = models.SmallIntegerField()
-    reservation = models.BooleanField()
+    session = models.ForeignKey(SessionModel, on_delete=models.PROTECT, verbose_name='Сессия')
+    user = models.ForeignKey(UserModel, on_delete=models.PROTECT, verbose_name='Пользователь')
+    seat = models.SmallIntegerField(verbose_name='Место')
+    reservation = models.BooleanField(verbose_name='Бронирование')
 
     class Meta:
         verbose_name_plural = 'Билеты'
