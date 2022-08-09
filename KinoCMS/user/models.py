@@ -14,7 +14,7 @@ class UserModel(models.Model):
     gender = models.BooleanField()
     phone = models.CharField(max_length=50)
     data = models.DateField()
-    # city = models.ChoiceField() TODO ChoiceField?
+    city = models.CharField(max_length=50, choices='')
 
     class Meta:
         verbose_name_plural = 'Клиенты'
