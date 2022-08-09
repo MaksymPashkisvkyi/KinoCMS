@@ -12,6 +12,11 @@ class UserModel(models.Model):
     card_number = models.CharField(max_length=50)
     language = models.BooleanField()
     gender = models.BooleanField()
-    phone = models.CharField()
+    phone = models.CharField(max_length=50)
     data = models.DateField()
     # city = models.ChoiceField() TODO ChoiceField?
+
+    class Meta:
+        verbose_name_plural = 'Клиенты'
+        verbose_name = 'Клиент'
+        ordering = ['name']
