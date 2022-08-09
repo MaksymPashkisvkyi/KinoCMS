@@ -9,13 +9,21 @@ class SEOModel(models.Model):
     keywords = models.CharField(max_length=50, verbose_name='Ключевые слова')
     description = models.CharField(max_length=50, verbose_name='Описание')
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name_plural = 'СЕО модели'
         verbose_name = 'СЕО модель'
+        ordering = ['id']
 
 
 class GalleryModel(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Название')
     image = models.ImageField(verbose_name='Изображение')
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = 'Галерея'
@@ -33,6 +41,9 @@ class CinemaModel(models.Model):
                                 verbose_name='Галерея')
     seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = 'Кинотеатры'
         verbose_name = 'Кинотеатр'
@@ -40,13 +51,18 @@ class CinemaModel(models.Model):
 
 
 class HallModel(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    hall_scheme = models.FileField()
-    cinema = models.ForeignKey(CinemaModel, on_delete=models.PROTECT)
-    banner_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='hall_banner_image')
-    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='hall_gallery')
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    name = models.CharField(max_length=50, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    hall_scheme = models.FileField(verbose_name='Схема зала')
+    cinema = models.ForeignKey(CinemaModel, on_delete=models.PROTECT, verbose_name='Кинотеатр')
+    banner_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='hall_banner_image',
+                                     verbose_name='Баннер')
+    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='hall_gallery',
+                                verbose_name='Галерея')
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = 'Залы'
@@ -67,6 +83,9 @@ class FilmModel(models.Model):
     IMAX = models.BooleanField()
     seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = 'Фильмы'
         verbose_name = 'Фильм'
@@ -82,6 +101,9 @@ class SessionModel(models.Model):
     DBOX = models.BooleanField()
     VIP = models.BooleanField()
 
+    def __str__(self):
+        return f"Сессия фильма {self.film}"
+
     class Meta:
         verbose_name_plural = 'Сессии'
         verbose_name = 'Сессия'
@@ -92,6 +114,9 @@ class TicketModel(models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.PROTECT, verbose_name='Пользователь')
     seat = models.SmallIntegerField(verbose_name='Место')
     reservation = models.BooleanField(verbose_name='Бронирование')
+
+    def __str__(self):
+        return f"Биллет {self.user}"
 
     class Meta:
         verbose_name_plural = 'Билеты'

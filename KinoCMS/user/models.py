@@ -16,6 +16,9 @@ class UserModel(models.Model):
     date = models.DateField(verbose_name='Дата рождения')
     city = models.CharField(max_length=50, verbose_name='Город')
 
+    def __str__(self):
+        return f'{self.name} {self.surname}'
+
     class Meta:
         verbose_name_plural = 'Клиенты'
         verbose_name = 'Клиент'

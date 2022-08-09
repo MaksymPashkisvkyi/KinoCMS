@@ -15,11 +15,11 @@ class MainPageModel(models.Model):
 
 
 class PagesModel(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField()
-    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='pages_main_image')
-    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='pages_gallery')
-    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT)
+    name = models.CharField(max_length=50, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    main_image = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='pages_main_image', verbose_name='Главное изображение страницы')
+    gallery = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='pages_gallery', verbose_name='Галерея')
+    seo_block = models.OneToOneField(SEOModel, on_delete=models.PROTECT, verbose_name='СЕО блок')
 
     class Meta:
         verbose_name_plural = 'Страницы'
@@ -28,7 +28,7 @@ class PagesModel(models.Model):
 
 
 class ContactsModel(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название')
+    name = models.CharField(max_length=50, verbose_name='Название кинотеатра')
     address = models.TextField(verbose_name='Адрес')
     coords = models.CharField(max_length=50, verbose_name='Координаты')
     logo = models.ForeignKey(GalleryModel, on_delete=models.PROTECT, related_name='contacts_logo', verbose_name='Лого')
