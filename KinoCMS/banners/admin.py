@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BannerConfigModel, BannerMainPageModel, BackgroundBannerModel, BannerNewsPromoModel
+from .models import BannerConfigModel, MainPageBannerModel, BackgroundBannerModel, NewsPromoBannerModel
 
 
 @admin.register(BannerConfigModel)
@@ -15,13 +15,13 @@ class BackgroundBannerAdmin(admin.ModelAdmin):
     list_display_links = ['image']
 
 
-@admin.register(BannerMainPageModel)
+@admin.register(MainPageBannerModel)
 class BannerMainPageAdmin(admin.ModelAdmin):
     list_display = ['id', 'image', 'URL', 'text']
     list_display_links = ['image']
 
 
-@admin.register(BannerNewsPromoModel)
+@admin.register(NewsPromoBannerModel)
 class BannerNewsPromoAdmin(admin.ModelAdmin):
     list_display = ['id', 'image', 'URL']
     list_display_links = ['image']
