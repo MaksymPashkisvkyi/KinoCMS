@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'banners.apps.BannersConfig',
     'admin_lte.apps.AdminLteConfig',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'KinoCMS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

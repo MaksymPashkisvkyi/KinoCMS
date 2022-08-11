@@ -17,5 +17,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', include('admin_lte.urls')),
-    path('', include('cinema.urls'))
+    path('', include('pages.urls'))
 ]
