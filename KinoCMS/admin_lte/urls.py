@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import index
+from .views import admin_statistic, AdminCinemaView
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', admin_statistic, name='admin_statistic'),
+    path('admin_cinema/', AdminCinemaView.as_view(), name='admin_cinema')
 ]
