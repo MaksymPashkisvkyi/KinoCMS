@@ -1,0 +1,67 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load static %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ title }}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="admin_table" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Фильм</th>
+                                <th>Зал</th>
+                                <th>Стоимость</th>
+                                <th>Время</th>
+                                <th>3D</th>
+                                <th>DBOX</th>
+                                <th>VIP</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for session in sessions %}
+                                <td>{{ <session class="pk"></session> }}</td>
+                                <td>{{ session.film }}</td>
+                                <td>{{ session.hall }}</td>
+                                <td>{{ session.price }}</td>
+                                <td>{{ session.time }}</td>
+                                <td>{{ session.three_D }}</td>
+                                <td>{{ session.DBOX }}</td>
+                                <td>{{ session.VIP }}</td>
+                                {% endfor %}
+                            </tr>
+
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>№</th>
+                                <th>Фильм</th>
+                                <th>Зал</th>
+                                <th>Стоимость</th>
+                                <th>Время</th>
+                                <th>3D</th>
+                                <th>DBOX</th>
+                                <th>VIP</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+{% endblock %}
+
