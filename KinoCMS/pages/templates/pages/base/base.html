@@ -1,4 +1,4 @@
-{% extends 'pages/bootstrap.html' %}
+{% extends 'pages/base/bootstrap.html' %}
 {% load bootstrap4 %}
 {% load static %}
 {% load pages_tags %}
@@ -7,86 +7,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'dist/css/base.css'%}">
     <link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
+
 </head>
 <body>
 <!-- __________________________________________ HEADER __________________________________________ -->
-<header class="container-fluid">
+<!--Banner-->
+<div class="row">
+    <div class="container-fluid themed-container text-center" style="border: 2px solid black; height: 100px">
+        <span>Banner</span>
+    </div>
+</div>
+<!--Banner-->
+<header class="container-fluid py-3 mb-1 border-bottom">
 
-    <div class="row row-cols-2 py-3 mb-4 border-bottom fixed-top">
-        <!--Banner-->
-        <div class="col-md-12 text-center py-4 my-2" style="border: 2px solid black">
-        <span>
-            Banner
-        </span>
-        </div>
-        <!--Banner-->
 
-        <!--    Logo-->
-        <div class="col col-md-3 offset-md-1 align-self-center text-center">
+    <div class="row my-3 text-center hidden-sm">
+        <div class="col-md-3 offset-1 col-lg-2 col-xl-2 themed-grid-col">
             <img class="img-fluid" src="{% static 'dist/img/LogoKinoCMS.png' %}">
         </div>
-        <!--    Logo-->
-        <div class="row">
+        <div class="col-md-8 themed-grid-col">
 
-            <!--        Search-->
-            <div class="col col-md-3 offset-md-1 align-self-center">
-                <form role="search">
-                    <input class="form-control" type="search" placeholder="Search"
-                           aria-label="Search" style="border: 2px solid black">
-                </form>
-            </div>
-            <!--        Search-->
-
-            <!-- Section: Social media -->
-            <div class="col col-md-3 align-self-center ">
-                {% social_media_icons %}
-            </div>
-            <!-- Section: Social media -->
-
-            <!--        Numbers-->
-            <div class="row offset-md-1">
-                <div class="col-md-12">
-                <span>
-                    Num1
-                </span>
+            <div class="row">
+                <div class="col-md-3 offset-md-1 themed-grid-col">
+                    <form role="search">
+                        <input class="form-control" type="search" placeholder="Search"
+                               aria-label="Search" style="border: 2px solid black">
+                    </form>
                 </div>
-                <div class="col-md-12">
-                <span>
-                    Num2
-                </span>
+                <div class="col-md-4 themed-grid-col">
+                    {% social_media_icons %}
+                </div>
+                <div class="col-md-4 themed-grid-col">
+                    <div class="row">
+                        <div class="col-md-12 themed-grid-col">Num1</div>
+                        <div class="col-md-12 themed-grid-col">Num2</div>
+                    </div>
                 </div>
             </div>
-            <!--        Numbers-->
 
-            <!--        Navbar-->
-            <div class="col col-md-8">
-                {% navbar %}
+            <div class="row">
+                <div class="col-md-11 themed-grid-col">{% navbar %}</div>
+                <div class="col-md-1 themed-grid-col">Lang</div>
             </div>
-            <!--        Navbar-->
-
-            <!--        Lang-->
-            <div class="col col-md-1 text-center">
-                <span>LANG</span>
-            </div>
-            <!--        Lang-->
         </div>
-
-
     </div>
-
-
 </header>
+
 
 <main class="container">
     {% block content %}
+
     {% endblock %}
+
 </main>
 
 
 <!-- __________________________________________ FOOTER __________________________________________ -->
-<footer class="row row-cols-1 row-cols-sm-2 row-cols-md-6 py-5 my-5 border-top fixed-bottom">
+<footer class="row row-cols-1 row-cols-sm-2 row-cols-md-6 py-5 my-5 border-top">
     <!--  images  -->
-    <div class="col col-sm-12 col-md-3 offset-md-1 mb-3">
+    <div class="col col-md-3 offset-md-1 mb-3">
         <span style="font-size: 1.25em">Мобильные приложения</span>
         <div class="row">
             <div class="col-6 mb-3">
@@ -101,8 +80,8 @@
     </div>
     <!--  images  -->
     <div class="col col-sm-12 col-md-2 offset-md-1 mb-3">
-        <h5>Афиша</h5>
         <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-dark"><h5>Афиша</h5></a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Расписание</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Скоро в прокате</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Кинотеатры</a></li>
@@ -110,8 +89,8 @@
         </ul>
     </div>
     <div class="col col-sm-12 col-md-2 offset-md-1 mb-3">
-        <h5>О кинотеатре</h5>
         <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-dark"><h5>О кинотеатре</h5></a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Новости</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Реклама</a></li>
             <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Кафе-бар</a></li>
@@ -131,5 +110,7 @@
     </div>
     <!-- Copyright -->
 </footer>
+
+
 </body>
 {% endblock %}
