@@ -105,18 +105,3 @@ class SessionModel(models.Model):
     class Meta:
         verbose_name_plural = 'Сессии'
         verbose_name = 'Сессия'
-
-
-class TicketModel(models.Model):
-    session = models.ForeignKey('SessionModel', on_delete=models.PROTECT, verbose_name='Сессия')
-    user = models.ForeignKey('user.UserModel', on_delete=models.PROTECT, verbose_name='Пользователь')
-    seat = models.SmallIntegerField(verbose_name='Место')
-    reservation = models.BooleanField(verbose_name='Бронирование')
-
-    def __str__(self):
-        return f"Биллет {self.user}"
-
-    class Meta:
-        verbose_name_plural = 'Билеты'
-        verbose_name = 'Билет'
-        ordering = ['session']
