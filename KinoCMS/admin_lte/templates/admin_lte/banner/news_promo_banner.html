@@ -1,0 +1,25 @@
+{% extends 'admin_lte/base/tables.html' %}
+{% load admin_lte_tags %}
+{% block table %}
+<table id="admin_table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Изображение</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for gallery in galleries %}
+        <td>{{ gallery.pk }}</td>
+        <td>{{ gallery.name }}</td>
+        <td>{{ gallery.image }}</td>
+        {% endfor %}
+        <td>
+            {% table_buttons %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endblock %}
