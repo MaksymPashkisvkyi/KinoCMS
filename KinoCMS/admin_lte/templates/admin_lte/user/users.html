@@ -1,64 +1,55 @@
 {% extends 'admin_lte/base/base.html' %}
-{% load static %}
+{% load admin_lte_tags %}
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="admin_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Имя</th>
-                                <th>Фамилия</th>
-                                <th>Ник</th>
-                                <th>Email</th>
-                                <th>Адрес</th>
-                                <th>Пароль</th>
-                                <th>Номер карты</th>
-                                <th>Язык</th>
-                                <th>Пол</th>
-                                <th>Телефон</th>
-                                <th>Дата рождения</th>
-                                <th>Город</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for user in users %}
-                                <td>{{ user.pk }}</td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.surname }}</td>
-                                <td>{{ user.nickname }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.address }}</td>
-                                <td>{{ user.password }}</td>
-                                <td>{{ user.card_number }}</td>
-                                <td>{{ user.language }}</td>
-                                <td>{{ user.gender }}</td>
-                                <td>{{ user.phone }}</td>
-                                <td>{{ user.date }}</td>
-                                <td>{{ user.city }}</td>
-                                {% endfor %}
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</section>
-{% endblock %}
+<div class="d-flex flex-row-reverse mb-3">
+    <button type="button" class="btn btn-info add-new">
+        <a class="text-decoration-none text-reset" href="{% url 'admin_add_user' %}">
+            <i class="fa fa-plus"></i> Добавить
+        </a>
+    </button>
+</div>
+<table id="admin_table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Ник</th>
+        <th>Email</th>
+        <th>Адрес</th>
+        <th>Пароль</th>
+        <th>Номер карты</th>
+        <th>Язык</th>
+        <th>Пол</th>
+        <th>Телефон</th>
+        <th>Дата рождения</th>
+        <th>Город</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.pk }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.surname }}</td>
+        <td>{{ user.nickname }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.password }}</td>
+        <td>{{ user.card_number }}</td>
+        <td>{{ user.language }}</td>
+        <td>{{ user.gender }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.date }}</td>
+        <td>{{ user.city }}</td>
 
+        {% if users %}
+        <td>
+            {% table_buttons %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

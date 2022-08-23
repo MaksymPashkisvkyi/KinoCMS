@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, CreateView
 from django.apps import apps
+
+from .forms import AddCinemaForm, AddHallForm, AddSEOForm, AddGalleryForm, AddUserForm, AddFilmForm
 
 
 def admin_statistic(request):
@@ -9,6 +12,72 @@ def admin_statistic(request):
         'title': 'Статистика'
     }
     return render(request, template_name, context)
+
+
+class AddCinemaView(CreateView):
+    form_class = AddCinemaForm
+    template_name = 'admin_lte/cinema/add_cinema.html'
+    success_url = reverse_lazy('admin_cinema')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить кинотеатр'
+        return context
+
+
+class AddHallView(CreateView):
+    form_class = AddHallForm
+    template_name = 'admin_lte/cinema/add_hall.html'
+    success_url = reverse_lazy('admin_add_cinema')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить зал'
+        return context
+
+
+class AddSEOView(CreateView):
+    form_class = AddSEOForm
+    template_name = 'admin_lte/cinema/add_seo.html'
+    success_url = reverse_lazy('admin_seo')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить SEO блок'
+        return context
+
+
+class AddGalleryView(CreateView):
+    form_class = AddGalleryForm
+    template_name = 'admin_lte/cinema/add_gallery.html'
+    success_url = reverse_lazy('admin_gallery')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить галерею'
+        return context
+
+
+class AddUserView(CreateView):
+    form_class = AddUserForm
+    template_name = 'admin_lte/user/add_user.html'
+    success_url = reverse_lazy('admin_user')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Профиль пользователя'
+        return context
+
+
+class AddFilmView(CreateView):
+    form_class = AddFilmForm
+    template_name = 'admin_lte/cinema/add_film.html'
+    success_url = reverse_lazy('admin_film')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить фильм'
+        return context
 
 
 class AdminCinemaView(TemplateView):
@@ -20,19 +89,6 @@ class AdminCinemaView(TemplateView):
         context = super().get_context_data()
         context['title'] = 'Кинотеатры'
         context['cinemas'] = model.objects.all()
-
-        return context
-
-
-class AdminHallView(TemplateView):
-    template_name = 'admin_lte/cinema/halls.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'HallModel')
-
-        context = super().get_context_data()
-        context['title'] = 'Залы'
-        context['halls'] = model.objects.all()
 
         return context
 
@@ -77,7 +133,7 @@ class AdminTicketView(TemplateView):
 
 
 class AdminSEOView(TemplateView):
-    template_name = 'admin_lte/admin/seo.html'
+    template_name = 'admin_lte/cinema/seo.html'
 
     def get_context_data(self, **kwargs):
         model = apps.get_model('cinema', 'SEOModel')
@@ -90,7 +146,7 @@ class AdminSEOView(TemplateView):
 
 
 class AdminGalleryView(TemplateView):
-    template_name = 'admin_lte/admin/gallery.html'
+    template_name = 'admin_lte/cinema/gallery.html'
 
     def get_context_data(self, **kwargs):
         model = apps.get_model('cinema', 'GalleryModel')
@@ -127,7 +183,7 @@ class AdminBannerView(TemplateView):
         }
 
         context = super().get_context_data()
-        context['title'] = 'banners'
+        context['title'] = 'Баннера/Слайдеры'
         context['background_banners'] = model['BackgroundBannerModel'].objects.all()
         context['main_page_banners'] = model['MainPageBannerModel'].objects.all()
         context['new_promo_banners'] = model['NewsPromoBannerModel'].objects.all()
@@ -143,7 +199,6 @@ class AdminBannerConfigView(TemplateView):
         model = apps.get_model('banners', 'BannerConfigModel')
 
         context = super().get_context_data()
-        context['title'] = 'banner_configs'
         context['banner_configs'] = model.objects.all()
 
         return context
@@ -156,7 +211,6 @@ class AdminBackgroundBannerView(TemplateView):
         model = apps.get_model('banners', 'BackgroundBannerModel')
 
         context = super().get_context_data()
-        context['title'] = 'BackgroundBannerModel'
         context['background_banners'] = model.objects.all()
 
         return context
@@ -169,7 +223,6 @@ class AdminMainPageBannerView(TemplateView):
         model = apps.get_model('banners', 'MainPageBannerModel')
 
         context = super().get_context_data()
-        context['title'] = 'MainPageBannerModel'
         context['main_page_banners'] = model.objects.all()
 
         return context
@@ -182,7 +235,6 @@ class AdminNewsPromoBannerView(TemplateView):
         model = apps.get_model('banners', 'NewsPromoBannerModel')
 
         context = super().get_context_data()
-        context['title'] = 'NewsPromoBannerModel'
         context['new_promo_banners'] = model.objects.all()
 
         return context

@@ -1,0 +1,107 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% block content %}
+
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.name|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            {{ form.description|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            {{ form.condition|as_crispy_field }}
+        </div>
+    </div>
+    <!--TODO сделать редактор изображений-->
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.logo|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.banner_image|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.gallery|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Список залов</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <div class="d-flex flex-row-reverse mb-3">
+                                        <div class="">
+                                            <button type="button" class="btn btn-info add-new">
+                                                <a class="text-decoration-none text-reset"
+                                                   href="{% url 'admin_add_hall' %}">
+                                                    <i class="fa fa-plus"></i> Добавить
+                                                </a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <table id="admin_table" class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Название</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <!-- TODO Сделать поле Дата создания-->
+                                            <!-- TODO Сделать вывод залов для конкретных кинотеатров-->
+                                            {% for hall in halls %}
+                                            <td>{{ hall.name }}</td>
+                                            {% endfor %}
+                                            {% if halls %}
+                                            <td>
+                                                {% table_buttons %}
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+        </div>
+
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.seo_block|as_crispy_field }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+
+{% endblock %}

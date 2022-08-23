@@ -1,55 +1,47 @@
 {% extends 'admin_lte/base/base.html' %}
-{% load static %}
+{% load admin_lte_tags %}
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="admin_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Кинотеатр</th>
-                                <th>Описание</th>
-                                <th>Условия</th>
-                                <th>Лого</th>
-                                <th>Баннер</th>
-                                <th>Галерея</th>
-                                <th>SEO</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for cinema in cinemas %}
-                                <td>{{ cinema.pk }}</td>
-                                <td>{{ cinema.name }}</td>
-                                <td>{{ cinema.description }}</td>
-                                <td>{{ cinema.condition }}</td>
-                                <td>{{ cinema.logo }}</td>
-                                <td>{{ cinema.banner_image }}</td>
-                                <td>{{ cinema.gallery }}</td>
-                                <td>{{ cinema.seo_block }}</td>
-                                {% endfor %}
-                            </tr>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</section>
+<div class="d-flex flex-row-reverse mb-3">
+    <button type="button" class="btn btn-info add-new">
+        <a class="text-decoration-none text-reset" href="{% url 'admin_add_cinema' %}">
+            <i class="fa fa-plus"></i> Добавить
+        </a>
+    </button>
+</div>
+<!--# TODO сделать список кинотеатров в виде лого-->
+<table id="admin_table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Кинотеатр</th>
+        <th>Описание</th>
+        <th>Условия</th>
+        <th>Лого</th>
+        <th>Баннер</th>
+        <th>Галерея</th>
+        <th>SEO</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for cinema in cinemas %}
+    <tr>
+        <td>{{ cinema.pk }}</td>
+        <td>{{ cinema.name }}</td>
+        <td>{{ cinema.description }}</td>
+        <td>{{ cinema.condition }}</td>
+        <td>{{ cinema.logo }}</td>
+        <td>{{ cinema.banner_image }}</td>
+        <td>{{ cinema.gallery }}</td>
+        <td>{{ cinema.seo_block }}</td>
+        {% if cinemas %}
+        <td>
+            {% table_buttons %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
 

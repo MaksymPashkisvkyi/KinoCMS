@@ -1,59 +1,48 @@
 {% extends 'admin_lte/base/base.html' %}
-{% load static %}
+{% load admin_lte_tags %}
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="admin_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Название</th>
-                                <th>Описание</th>
-                                <th>Главное изображение</th>
-                                <th>Галерея</th>
-                                <th>URL</th>
-                                <th>3D</th>
-                                <th>2D</th>
-                                <th>IMAX</th>
-                                <th>SEO</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for film in films %}
-                                <td>{{ film.pk }}</td>
-                                <td>{{ film.name }}</td>
-                                <td>{{ film.description }}</td>
-                                <td>{{ film.main_image }}</td>
-                                <td>{{ film.gallery }}</td>
-                                <td>{{ film.URL }}</td>
-                                <td>{{ film.three_D }}</td>
-                                <td>{{ film.two_D }}</td>
-                                <td>{{ film.IMAX }}</td>
-                                <td>{{ film.seo_block }}</td>
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</section>
+<div class="d-flex flex-row-reverse mb-3">
+    <button type="button" class="btn btn-info add-new">
+        <a class="text-decoration-none text-reset" href="{% url 'admin_add_film' %}">
+            <i class="fa fa-plus"></i> Добавить
+        </a>
+    </button>
+</div>
+<table id="admin_table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Описание</th>
+        <th>Главное изображение</th>
+        <th>Галерея</th>
+        <th>URL</th>
+        <th>3D</th>
+        <th>2D</th>
+        <th>IMAX</th>
+        <th>SEO</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for film in films %}
+    <tr>
+        <td>{{ film.pk }}</td>
+        <td>{{ film.name }}</td>
+        <td>{{ film.description }}</td>
+        <td>{{ film.main_image }}</td>
+        <td>{{ film.gallery }}</td>
+        <td>{{ film.URL }}</td>
+        <td>{{ film.three_D }}</td>
+        <td>{{ film.two_D }}</td>
+        <td>{{ film.IMAX }}</td>
+        <td>{{ film.seo_block }}</td>
+        {% if films %}
+        <td>
+            {% table_buttons %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
-

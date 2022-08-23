@@ -1,0 +1,54 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% block content %}
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.name|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            {{ form.description|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.main_image|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.gallery|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.URL|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-1">
+            {{ form.three_D|as_crispy_field }}
+        </div>
+        <div class="col-md-1">
+            {{ form.two_D|as_crispy_field }}
+        </div>
+        <div class="col-md-1">
+            {{ form.IMAX|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            {{ form.seo_block|as_crispy_field }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+
+{% endblock %}

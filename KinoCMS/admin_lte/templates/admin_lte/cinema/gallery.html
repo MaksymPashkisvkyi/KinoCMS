@@ -1,25 +1,32 @@
 {% extends 'admin_lte/base/table_layout.html' %}
 {% load admin_lte_tags %}
 {% block table %}
+<div class="d-flex flex-row-reverse mb-3">
+    <button type="button" class="btn btn-info add-new">
+        <a class="text-decoration-none text-reset" href="{% url 'admin_add_gallery' %}">
+            <i class="fa fa-plus"></i> Добавить
+        </a>
+    </button>
+</div>
 <table id="admin_table" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>№</th>
         <th>Название</th>
         <th>Изображение</th>
     </tr>
     </thead>
     <tbody>
+    {% for gallery in galleries %}
     <tr>
-        {% for gallery in galleries %}
-        <td>{{ gallery.pk }}</td>
         <td>{{ gallery.name }}</td>
         <td>{{ gallery.image }}</td>
-        {% endfor %}
+        {% if galleries %}
         <td>
             {% table_buttons %}
         </td>
+        {% endif %}
     </tr>
+    {% endfor %}
     </tbody>
 </table>
 {% endblock %}
