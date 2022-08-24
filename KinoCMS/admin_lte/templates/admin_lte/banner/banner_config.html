@@ -1,52 +1,25 @@
-{% extends 'admin_lte/base/base.html' %}
-{% load static %}
-{% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="admin_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Название</th>
-                                <th>Изображение</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for gallery in galleries %}
-                                <td>{{ gallery.pk }}</td>
-                                <td>{{ gallery.name }}</td>
-                                <td>{{ gallery.image }}</td>
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <th>№</th>
-                                <th>Название</th>
-                                <th>Изображение</th>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-</section>
+{% extends 'admin_lte/base/table_layout.html' %}
+{% load admin_lte_tags %}
+{% block banner_config_table %}
+<table id="admin_table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Изображение</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for gallery in galleries %}
+        <td>{{ gallery.pk }}</td>
+        <td>{{ gallery.name }}</td>
+        <td>{{ gallery.image }}</td>
+        {% endfor %}
+        <td>
+            {% table_buttons %}
+        </td>
+    </tr>
+    </tbody>
+</table>
 {% endblock %}
-

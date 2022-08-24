@@ -2,36 +2,18 @@
 {% load static %}
 {% block content %}
 <section class="content">
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
+                        <h3 class="card-title">На главной верх</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="admin_background_banner_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for gallery in galleries %}
-
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-
-                            </tr>
-                            </tfoot>
-                        </table>
-
+                        {% block main_page_banner_table %}
+                        {% endblock %}
                     </div>
                     <!-- /.card-body -->
 
@@ -50,31 +32,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
+                        <h3 class="card-title">Сквозной баннер на заднем фоне</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="admin_main_page_banner_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for gallery in galleries %}
-
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-
-                            </tr>
-                            </tfoot>
-                        </table>
-
+                        {% block background_banner_table %}
+                        {% endblock %}
                     </div>
                     <!-- /.card-body -->
 
@@ -93,31 +56,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
+                        <h3 class="card-title">На главной Новости Акции</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="admin_news_promo_banner_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for gallery in galleries %}
-
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-
-                            </tr>
-                            </tfoot>
-                        </table>
-
+                        {% block news_promo_banner_table %}
+                        {% endblock %}
                     </div>
                     <!-- /.card-body -->
 
@@ -136,30 +80,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ title }}</h3>
+                        <h3 class="card-title">Настройки баннеров</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="admin_config_banner_table" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                {% for gallery in galleries %}
-
-                                {% endfor %}
-                            </tr>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-
-                            </tr>
-                            </tfoot>
-                        </table>
+                        {% block banner_config_table %}
+                        {% endblock %}
 
                     </div>
                     <!-- /.card-body -->
