@@ -4,9 +4,9 @@ from django.db import models
 class UserModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Имя')
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
-    nickname = models.CharField(max_length=50, verbose_name='Ник')
+    nickname = models.CharField(max_length=50, verbose_name='Псевдоним')
     email = models.EmailField()
-    address = models.CharField(max_length=50, verbose_name='Адрес')
+    address = models.CharField(max_length=50, verbose_name='Адресс')
     password = models.CharField(max_length=50, verbose_name='Пароль')
     repeat_password = models.CharField(max_length=50, verbose_name='Повторить пароль')
     card_number = models.CharField(max_length=50, verbose_name='Номер карты')
