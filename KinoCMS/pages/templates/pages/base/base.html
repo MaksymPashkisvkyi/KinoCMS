@@ -1,6 +1,7 @@
 {% extends 'pages/base/bootstrap.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load i18n %}
 {% load pages_tags %}
 {% block bootstrap4_content %}
 <head>
@@ -30,7 +31,7 @@
             <div class="row my-1">
                 <!--Logo-->
                 <div class="logo col-md-1 offset-md-1 d-none d-lg-block">
-                    <a class="text-dark" href="{% url 'main' %}">
+                    <a class="text-decoration-none text-reset" href="{% url 'main' %}">
                         <div class="display-4">KinoCMS</div>
                     </a>
                 </div>
@@ -38,7 +39,7 @@
                 <!--Search-->
                 <div class="col-md-2 offset-2">
                     <form role="search">
-                        <input class="form-control" type="search" placeholder="Search"
+                        <input class="form-control" type="search" placeholder="{% trans 'Search' %}"
                                aria-label="Search" style="border: 2px solid black">
                     </form>
                 </div>
@@ -64,10 +65,9 @@
                     <div class="row justify-content-end mr-4">
                         <strong>
                             <button class="btn btn-outline btn-sm">
-                                <small class="text-dark">Войти / Регистрация</small>
+                                <small class="text-dark">{% trans 'Войти / Регистрация' %}</small>
                             </button>
                         </strong>
-
                         <select id="language" name="language" class="px-2 py-1 m-1">
                             <option value="ru">рус</option>
                             <option value="ua">укр</option>
@@ -101,11 +101,11 @@
         <span style="font-size: 1.25em">Мобильные приложения</span>
         <div class="row">
             <div class="col-6 mb-3">
-                <img class="rounded mx-auto d-block w-50 mb-1" src="{% static 'dist/img/google-play-badge.png' %}">
+                <img class="rounded mx-auto d-block w-50 mb-1" src="{% static 'pages/img/google-play-badge.png' %}">
             </div>
             <div class="col-6 mb-3">
                 <img class="rounded mx-auto d-block w-50 mb-1"
-                     src="{% static 'dist/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.png' %}">
+                     src="{% static 'pages/img/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.png' %}">
             </div>
         </div>
         <span style="font-size: 0.75em">Разработка сайтов: AVADA-MEDIA</span>
@@ -124,9 +124,11 @@
     </div>
     <div class="col col-sm-12 col-md-2 offset-md-1 mb-3">
         <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="{% url 'about' %}" class="nav-link p-0 text-dark"><h5>О кинотеатре</h5></a></li>
+            <li class="nav-item mb-2"><a href="{% url 'about' %}" class="nav-link p-0 text-dark"><h5>О кинотеатре</h5>
+            </a></li>
             <li class="nav-item mb-2"><a href="{% url 'news' %}" class="nav-link p-0 text-muted">Новости</a></li>
-            <li class="nav-item mb-2"><a href="{% url 'advertisement' %}" class="nav-link p-0 text-muted">Реклама</a></li>
+            <li class="nav-item mb-2"><a href="{% url 'advertisement' %}" class="nav-link p-0 text-muted">Реклама</a>
+            </li>
             <li class="nav-item mb-2"><a href="{% url 'cafe' %}" class="nav-link p-0 text-muted">Кафе-бар</a></li>
             <li class="nav-item mb-2"><a href="{% url 'contacts' %}" class="nav-link p-0 text-muted">Контакты</a></li>
         </ul>
