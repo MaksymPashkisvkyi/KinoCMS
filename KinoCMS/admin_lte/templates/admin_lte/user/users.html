@@ -11,38 +11,31 @@
 <table id="admin_table" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>№</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
-        <th>Ник</th>
+        <th width="40">№</th>
+        <th>Дата регистрации</th>
+        <th>День рождения</th>
         <th>Email</th>
-        <th>Адрес</th>
-        <th>Пароль</th>
-        <th>Номер карты</th>
-        <th>Язык</th>
-        <th>Пол</th>
         <th>Телефон</th>
-        <th>Дата рождения</th>
+        <th>ФИО</th>
+        <th>Псевдоним</th>
         <th>Город</th>
+        {% if users %}
+        <th width="40"></th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
     {% for user in users %}
     <tr>
+        <!--TODO Сделать чтобы значения в ячейках не переносились на новую строку-->
         <td>{{ user.pk }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.surname }}</td>
-        <td>{{ user.nickname }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.address }}</td>
-        <td>{{ user.password }}</td>
-        <td>{{ user.card_number }}</td>
-        <td>{{ user.language }}</td>
-        <td>{{ user.gender }}</td>
-        <td>{{ user.phone }}</td>
+        <td><!--TODO Date of registration--></td>
         <td>{{ user.date }}</td>
+        <td >{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.name }} {{ user.surname }}</td>
+        <td>{{ user.nickname }}</td>
         <td>{{ user.city }}</td>
-
         {% if users %}
         <td>
             {% table_buttons %}

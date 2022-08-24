@@ -12,11 +12,14 @@
 <table id="admin_table" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>№</th>
+        <th width="40">№</th>
         <th>URL</th>
         <th>Заголовок</th>
         <th>Ключевые слова</th>
         <th>Описание</th>
+        {% if seo_s %}
+        <th width="40"></th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>

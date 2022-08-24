@@ -11,7 +11,7 @@
 <table id="admin_table" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>№</th>
+        <th width="40">№</th>
         <th>Название</th>
         <th>Описание</th>
         <th>Главное изображение</th>
@@ -21,6 +21,9 @@
         <th>2D</th>
         <th>IMAX</th>
         <th>SEO</th>
+        {% if films %}
+        <th width="40"></th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>

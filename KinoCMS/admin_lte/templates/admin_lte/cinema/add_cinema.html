@@ -1,5 +1,4 @@
 {% extends 'admin_lte/base/base.html' %}
-{% load static %}
 {% load crispy_forms_tags %}
 {% load admin_lte_tags %}
 {% block content %}
@@ -63,22 +62,26 @@
                                     <table id="admin_table" class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Название</th>
+                                            <th width="40%">Название</th>
+                                            <th width="40%">Дата создания</th>
+                                            {% if halls %}
+                                            <th width="40"></th>
+                                            {% endif %}
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% for hall in halls %}
                                         <tr>
                                             <!-- TODO Сделать поле Дата создания-->
                                             <!-- TODO Сделать вывод залов для конкретных кинотеатров-->
-                                            {% for hall in halls %}
                                             <td>{{ hall.name }}</td>
-                                            {% endfor %}
                                             {% if halls %}
                                             <td>
                                                 {% table_buttons %}
                                             </td>
                                             {% endif %}
                                         </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

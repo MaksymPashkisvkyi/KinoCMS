@@ -13,7 +13,7 @@
 <table id="admin_table" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>№</th>
+        <th width="40">№</th>
         <th>Кинотеатр</th>
         <th>Описание</th>
         <th>Условия</th>
@@ -21,6 +21,10 @@
         <th>Баннер</th>
         <th>Галерея</th>
         <th>SEO</th>
+        {% if cinemas %}
+        <th width="40"></th>
+        {% endif %}
+
     </tr>
     </thead>
     <tbody>
