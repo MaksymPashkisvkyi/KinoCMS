@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load admin_lte_tags %}
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -28,6 +29,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+    var $table = $('#table')
+
+<!--    window.operateEvents = {-->
+<!--      'click .edit': function (e, value, row, index) {-->
+<!--        alert('You click like action, row: ')-->
+<!--      },-->
+<!--      'click .delete': function (e, value, row, index) {-->
+<!--        alert('You click delete action, row: ')-->
+<!--      }-->
+<!--    }-->
+
+<!--    function control_btn(e) {-->
+<!--        alert('You click delete action, row: ')-->
+<!--    }-->
+
+    $(document).ready(function() {
+        $('#table_id tbody').on( 'click', 'tr', function () {
+            var id = table.row(this).id();
+            alert( 'Clicked row id '+id );
+        } );
+    } );
+
+
+    </script>
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -209,88 +237,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
 
             <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_statistic' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Статистика</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_banner' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Баннера/Слайдеры</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_film' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Фильмы</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_cinema' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Кинотеатры</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Новости#</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Акции#</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Страницы#</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_user' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Пользователи</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Рассылка#</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_seo' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>SEO</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{% url 'admin_gallery' %}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Галерея</p>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            {% show_side_menu %}
             <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
@@ -307,8 +254,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Starter Page</li>
+                            <!--TODO make breadcrumb-item tag-->
+                            <!--<li class="breadcrumb-item"><a href="#">Home</a></li>-->
+                            <!--<li class="breadcrumb-item active">Starter Page</li>-->
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->

@@ -1,0 +1,15 @@
+{% block side_menu %}
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+        data-accordion="false">
+        {% for m in menu %}
+        <li class="nav-item">
+            <a href="{% url m.url %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>{{ m.title }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock side_menu %}
