@@ -29,8 +29,6 @@ def show_side_menu():
         {'title': "Акции#", 'url': "admin_statistic"},
         {'title': "Страницы#", 'url': "admin_statistic"},
         {'title': "Пользователи", 'url': "admin_user"},
-        {'title': "Рассылка#", 'url': "admin_statistic"},
-        {'title': "SEO", 'url': "admin_seo"},
-        {'title': "Галерея", 'url': "admin_gallery"}
+        {'title': "Рассылка#", 'url': "admin_statistic"}
     ]
     return {'menu': menu}

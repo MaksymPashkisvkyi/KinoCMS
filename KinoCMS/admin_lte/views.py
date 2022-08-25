@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from django.apps import apps
 
-from .forms import AddCinemaForm, AddHallForm, AddSEOForm, AddGalleryForm, AddUserForm, AddFilmForm
+from .forms import CinemaForm, HallForm, UserForm, FilmForm
 
 
 def admin_statistic(request):
@@ -15,18 +15,57 @@ def admin_statistic(request):
 
 
 class AddCinemaView(CreateView):
-    form_class = AddCinemaForm
+    form_class = CinemaForm
     template_name = 'admin_lte/cinema/add_cinema.html'
     success_url = reverse_lazy('admin_cinema')
 
     def get_context_data(self, **kwargs):
+        model = apps.get_model('cinema', 'HallModel')
         context = super().get_context_data()
         context['title'] = 'Добавить кинотеатр'
+        context['halls'] = model.objects.all()
         return context
 
 
+class EditCinemaView(UpdateView):
+    model = apps.get_model('cinema', 'CinemaModel')
+    form_class = CinemaForm
+    template_name = 'admin_lte/cinema/edit_cinema.html'
+    success_url = reverse_lazy('admin_cinema')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Редактировать кинотеатр'
+        return context
+
+    def get_queryset(self):
+        model = apps.get_model('cinema', 'CinemaModel')
+        return model.objects.filter(pk=self.kwargs['pk'])
+
+
+class DeleteCinemaView(DeleteView):
+    model = apps.get_model('cinema', 'CinemaModel')
+    success_url = reverse_lazy('admin_cinema')
+    # model = apps.get_model('cinema', 'CinemaModel')
+    # form_class = CinemaForm
+    template_name = 'admin_lte/cinema/delete_cinema.html'
+    # success_url = reverse_lazy('admin_cinema')
+    #
+    # def get_context_data(self, **kwargs):
+    #     model = apps.get_model('cinema', 'CinemaModel')
+    #     context = super().get_context_data()
+    #     context['cinema'] = model.objects.get(pk=self.kwargs['pk'])
+    #     context['title'] = 'Удалить кинотеатр'
+    #     return context
+    #
+    # def get_queryset(self):
+    #     model = apps.get_model('cinema', 'CinemaModel')
+    #     return model.objects.filter(pk=self.kwargs['pk'])
+    # pass
+
+
 class AddHallView(CreateView):
-    form_class = AddHallForm
+    form_class = HallForm
     template_name = 'admin_lte/cinema/add_hall.html'
     success_url = reverse_lazy('admin_add_cinema')
 
@@ -36,30 +75,8 @@ class AddHallView(CreateView):
         return context
 
 
-class AddSEOView(CreateView):
-    form_class = AddSEOForm
-    template_name = 'admin_lte/cinema/add_seo.html'
-    success_url = reverse_lazy('admin_seo')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Добавить SEO блок'
-        return context
-
-
-class AddGalleryView(CreateView):
-    form_class = AddGalleryForm
-    template_name = 'admin_lte/cinema/add_gallery.html'
-    success_url = reverse_lazy('admin_gallery')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Добавить галерею'
-        return context
-
-
 class AddUserView(CreateView):
-    form_class = AddUserForm
+    form_class = UserForm
     template_name = 'admin_lte/user/add_user.html'
     success_url = reverse_lazy('admin_user')
 
@@ -70,7 +87,7 @@ class AddUserView(CreateView):
 
 
 class AddFilmView(CreateView):
-    form_class = AddFilmForm
+    form_class = FilmForm
     template_name = 'admin_lte/cinema/add_film.html'
     success_url = reverse_lazy('admin_film')
 
@@ -128,32 +145,6 @@ class AdminTicketView(TemplateView):
         context = super().get_context_data()
         context['title'] = 'Билеты'
         context['tickets'] = model.objects.all()
-
-        return context
-
-
-class AdminSEOView(TemplateView):
-    template_name = 'admin_lte/cinema/seo.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'SEOModel')
-
-        context = super().get_context_data()
-        context['title'] = 'SEO'
-        context['seo_s'] = model.objects.all()
-
-        return context
-
-
-class AdminGalleryView(TemplateView):
-    template_name = 'admin_lte/cinema/gallery.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'GalleryModel')
-
-        context = super().get_context_data()
-        context['title'] = 'Галерея'
-        context['galleries'] = model.objects.all()
 
         return context
 
