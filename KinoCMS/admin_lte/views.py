@@ -86,17 +86,6 @@ class AddUserView(CreateView):
         return context
 
 
-class AddFilmView(CreateView):
-    form_class = FilmForm
-    template_name = 'admin_lte/cinema/add_film.html'
-    success_url = reverse_lazy('admin_film')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Добавить фильм'
-        return context
-
-
 class AdminCinemaView(TemplateView):
     template_name = 'admin_lte/cinema/cinemas.html'
 
@@ -123,29 +112,14 @@ class AdminFilmView(TemplateView):
         return context
 
 
-class AdminSessionView(TemplateView):
-    template_name = 'admin_lte/cinema/sessions.html'
+class AddFilmView(CreateView):
+    form_class = FilmForm
+    template_name = 'admin_lte/cinema/add_film.html'
+    success_url = reverse_lazy('admin_film')
 
     def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'SessionModel')
-
         context = super().get_context_data()
-        context['title'] = 'Сессии'
-        context['sessions'] = model.objects.all()
-
-        return context
-
-
-class AdminTicketView(TemplateView):
-    template_name = 'admin_lte/cinema/tickets.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('user', 'TicketModel')
-
-        context = super().get_context_data()
-        context['title'] = 'Билеты'
-        context['tickets'] = model.objects.all()
-
+        context['title'] = 'Добавить фильм'
         return context
 
 
@@ -169,8 +143,7 @@ class AdminBannerView(TemplateView):
         model = {
             'BackgroundBannerModel': apps.get_model('banners', 'BackgroundBannerModel'),
             'MainPageBannerModel': apps.get_model('banners', 'MainPageBannerModel'),
-            'NewsPromoBannerModel': apps.get_model('banners', 'NewsPromoBannerModel'),
-            'BannerConfigModel': apps.get_model('banners', 'BannerConfigModel')
+            'NewsPromoBannerModel': apps.get_model('banners', 'NewsPromoBannerModel')
         }
 
         context = super().get_context_data()
@@ -178,54 +151,5 @@ class AdminBannerView(TemplateView):
         context['background_banners'] = model['BackgroundBannerModel'].objects.all()
         context['main_page_banners'] = model['MainPageBannerModel'].objects.all()
         context['new_promo_banners'] = model['NewsPromoBannerModel'].objects.all()
-        context['banner_configs'] = model['BannerConfigModel'].objects.all()
-
-        return context
-
-
-class AdminBannerConfigView(TemplateView):
-    template_name = 'admin_lte/banner/banner_config.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('banners', 'BannerConfigModel')
-
-        context = super().get_context_data()
-        context['banner_configs'] = model.objects.all()
-
-        return context
-
-
-class AdminBackgroundBannerView(TemplateView):
-    template_name = 'admin_lte/banner/background_banner.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('banners', 'BackgroundBannerModel')
-
-        context = super().get_context_data()
-        context['background_banners'] = model.objects.all()
-
-        return context
-
-
-class AdminMainPageBannerView(TemplateView):
-    template_name = 'admin_lte/banner/main_page_banner.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('banners', 'MainPageBannerModel')
-
-        context = super().get_context_data()
-        context['main_page_banners'] = model.objects.all()
-
-        return context
-
-
-class AdminNewsPromoBannerView(TemplateView):
-    template_name = 'admin_lte/banner/new_promo_banner.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('banners', 'NewsPromoBannerModel')
-
-        context = super().get_context_data()
-        context['new_promo_banners'] = model.objects.all()
 
         return context

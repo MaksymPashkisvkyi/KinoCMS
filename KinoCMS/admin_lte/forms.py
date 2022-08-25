@@ -4,7 +4,7 @@ from django.apps import apps
 from .utils import CITIES, LANGS, GENDERS
 
 
-class AddCinemaForm(forms.ModelForm):
+class CinemaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['logo'].empty_label = 'Логотип не выбран'
@@ -21,7 +21,7 @@ class AddCinemaForm(forms.ModelForm):
         }
 
 
-class AddHallForm(forms.ModelForm):
+class HallForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cinema'].empty_label = 'Кинотеатр не выбран'
@@ -37,7 +37,7 @@ class AddHallForm(forms.ModelForm):
         }
 
 
-class AddSEOForm(forms.ModelForm):
+class SEOForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'SEOModel')
         fields = ['URL', 'title', 'keywords', 'description']
@@ -49,7 +49,7 @@ class AddSEOForm(forms.ModelForm):
         }
 
 
-class AddGalleryForm(forms.ModelForm):
+class GalleryForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'GalleryModel')
         fields = ['name', 'image']
@@ -58,7 +58,7 @@ class AddGalleryForm(forms.ModelForm):
         }
 
 
-class AddUserForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('user', 'UserModel')
         fields = ['name', 'surname', 'nickname', 'email', 'address', 'password', 'repeat_password', 'card_number',
@@ -80,7 +80,7 @@ class AddUserForm(forms.ModelForm):
         }
 
 
-class AddFilmForm(forms.ModelForm):
+class FilmForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['main_image'].empty_label = 'Главное изображение не выбрано'
