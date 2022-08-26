@@ -36,3 +36,13 @@ def show_side_menu():
         {'title': "Рассылка#", 'url': "admin_statistic"}
     ]
     return {'menu': menu}
+
+
+@register.inclusion_tag('admin_lte/cinema/halls.html')
+def show_halls_table():
+    pass
+
+
+@register.inclusion_tag('admin_lte/cinema/form_cinema.html')
+def show_form_cinema(form):
+    return {'form': form}

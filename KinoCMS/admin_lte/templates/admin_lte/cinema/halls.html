@@ -1,0 +1,56 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Список залов</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="d-flex flex-row-reverse mb-3">
+                            <div class="">
+                                <button type="button" class="btn btn-info add-new">
+                                    <a class="text-decoration-none text-reset"
+                                       href="{% url 'admin_add_hall' %}">
+                                        <i class="fa fa-plus"></i> Добавить
+                                    </a>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="admin_table" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th width="40%">Название</th>
+                                <th width="40%">Дата создания</th>
+                                {% if halls %}
+                                <th width="40"></th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for hall in halls %}
+                            <tr>
+                                <!-- TODO Сделать поле Дата создания-->
+                                <!-- TODO Сделать вывод залов для конкретных кинотеатров-->
+                                <td>{{ hall.name }}</td>
+                                {% if halls %}
+                                <td>
+                                    <!--{% table_buttons }-->
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>

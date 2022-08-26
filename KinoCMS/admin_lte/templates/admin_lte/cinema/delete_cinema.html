@@ -1,0 +1,18 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% block content %}
+
+
+<form method="post">
+    {% csrf_token %}
+    <p>
+        {{ cinema.name }}
+    </p>
+    <button onclick="return confirm('Вы хотите удалить {{ cinema.name }}?');" type="submit" class="btn btn-primary">
+        Удалить
+    </button>
+</form>
+
+
+{% endblock %}
