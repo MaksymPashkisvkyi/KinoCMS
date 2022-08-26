@@ -14,6 +14,21 @@ def admin_statistic(request):
     return render(request, template_name, context)
 
 
+class AdminCinemaView(TemplateView):
+    template_name = 'admin_lte/cinema/cinemas.html'
+
+    def get_context_data(self, **kwargs):
+        model = apps.get_model('cinema', 'CinemaModel')
+
+        context = super().get_context_data()
+        context['title'] = 'Кинотеатры'
+        context['admin_edit_cinema'] = 'admin_edit_cinema'
+        context['admin_delete_cinema'] = 'admin_delete_cinema'
+        context['cinemas'] = model.objects.all()
+
+        return context
+
+
 class AddCinemaView(CreateView):
     form_class = CinemaForm
     template_name = 'admin_lte/cinema/add_cinema.html'
@@ -67,32 +82,6 @@ class AddHallView(CreateView):
         return context
 
 
-class AddUserView(CreateView):
-    form_class = UserForm
-    template_name = 'admin_lte/user/add_user.html'
-    success_url = reverse_lazy('admin_user')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Профиль пользователя'
-        return context
-
-
-class AdminCinemaView(TemplateView):
-    template_name = 'admin_lte/cinema/cinemas.html'
-
-    def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'CinemaModel')
-
-        context = super().get_context_data()
-        context['title'] = 'Кинотеатры'
-        context['admin_edit_cinema'] = 'admin_edit_cinema'
-        context['admin_delete_cinema'] = 'admin_delete_cinema'
-        context['cinemas'] = model.objects.all()
-
-        return context
-
-
 class AdminFilmView(TemplateView):
     template_name = 'admin_lte/cinema/films.html'
 
@@ -125,8 +114,50 @@ class AdminUserView(TemplateView):
 
         context = super().get_context_data()
         context['title'] = 'Пользователи'
+        context['admin_edit_user'] = 'admin_edit_user'
+        context['admin_delete_user'] = 'admin_delete_user'
         context['users'] = model.objects.all()
 
+        return context
+
+
+class AddUserView(CreateView):
+    form_class = UserForm
+    template_name = 'admin_lte/user/add_user.html'
+    success_url = reverse_lazy('admin_user')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Добавить профиль пользователя'
+        return context
+
+
+class EditUserView(UpdateView):
+    model = apps.get_model('user', 'UserModel')
+    form_class = UserForm
+    template_name = 'admin_lte/user/edit_user.html'
+    success_url = reverse_lazy('admin_user')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Редактировать профиль пользователя'
+        return context
+
+    def get_queryset(self):
+        model = apps.get_model('user', 'UserModel')
+        return model.objects.filter(pk=self.kwargs['pk'])
+
+
+class DeleteUserView(DeleteView):
+    model = apps.get_model('user', 'UserModel')
+    success_url = reverse_lazy('admin_user')
+    template_name = 'admin_lte/user/delete_user.html'
+
+    def get_context_data(self, **kwargs):
+        model = apps.get_model('user', 'UserModel')
+        context = super().get_context_data()
+        context['user'] = model.objects.get(pk=self.kwargs['pk'])
+        context['title'] = 'Удалить профиль пользователя'
         return context
 
 
