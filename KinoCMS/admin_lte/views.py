@@ -46,22 +46,14 @@ class EditCinemaView(UpdateView):
 class DeleteCinemaView(DeleteView):
     model = apps.get_model('cinema', 'CinemaModel')
     success_url = reverse_lazy('admin_cinema')
-    # model = apps.get_model('cinema', 'CinemaModel')
-    # form_class = CinemaForm
     template_name = 'admin_lte/cinema/delete_cinema.html'
-    # success_url = reverse_lazy('admin_cinema')
-    #
-    # def get_context_data(self, **kwargs):
-    #     model = apps.get_model('cinema', 'CinemaModel')
-    #     context = super().get_context_data()
-    #     context['cinema'] = model.objects.get(pk=self.kwargs['pk'])
-    #     context['title'] = 'Удалить кинотеатр'
-    #     return context
-    #
-    # def get_queryset(self):
-    #     model = apps.get_model('cinema', 'CinemaModel')
-    #     return model.objects.filter(pk=self.kwargs['pk'])
-    # pass
+
+    def get_context_data(self, **kwargs):
+        model = apps.get_model('cinema', 'CinemaModel')
+        context = super().get_context_data()
+        context['cinema'] = model.objects.get(pk=self.kwargs['pk'])
+        context['title'] = 'Удалить кинотеатр'
+        return context
 
 
 class AddHallView(CreateView):
@@ -94,6 +86,8 @@ class AdminCinemaView(TemplateView):
 
         context = super().get_context_data()
         context['title'] = 'Кинотеатры'
+        context['admin_edit_cinema'] = 'admin_edit_cinema'
+        context['admin_delete_cinema'] = 'admin_delete_cinema'
         context['cinemas'] = model.objects.all()
 
         return context

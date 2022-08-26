@@ -1,2 +1,7 @@
-<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+{% block buttons %}
+{% for b in buttons %}
+    <a href="{% url b.url b.pk %}" class="{{b.class}}" title="{{b.title}}" data-toggle="tooltip">
+        <i class="material-icons"></i>
+    </a>
+{% endfor %}
+{% endblock buttons %}

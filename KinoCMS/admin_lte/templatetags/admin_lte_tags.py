@@ -4,15 +4,19 @@ register = template.Library()
 
 
 @register.inclusion_tag('admin_lte/base/table_buttons.html')
-def table_buttons():
+def table_buttons(edit_url, delete_url, pk):
     buttons = [
         {
+            'pk': pk,
             'class': 'edit fa fa-edit text-decoration-none text-reset',
-            'title': 'Edit'
+            'url': edit_url,
+            'title': 'Edit',
         },
         {
+            'pk': pk,
             'class': 'delete fa fa-trash text-decoration-none text-reset',
-            'title': 'Delete'
+            'url': delete_url,
+            'title': 'Delete',
         }
     ]
     return {'buttons': buttons}
