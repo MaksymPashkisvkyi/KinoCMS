@@ -1,48 +1,49 @@
 {% load crispy_forms_tags %}
 {% load admin_lte_tags %}
 
-<form method="post">
-    {% csrf_token %}
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.name|as_crispy_field }}
-        </div>
+{% if form.errors %}
+{% for field in form %}
+{% for error in field.errors %}
+<div class="form-error">
+    {{ error }} {{ field }}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.name|as_crispy_field }}
     </div>
-    <div class="form-row">
-        <div class="col-md-12">
-            {{ form.description|as_crispy_field }}
-        </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {{ form.description|as_crispy_field }}
     </div>
-    <div class="form-row">
-        <div class="col-md-12">
-            {{ form.condition|as_crispy_field }}
-        </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {{ form.condition|as_crispy_field }}
     </div>
-    <!--TODO сделать редактор изображений-->
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.logo|as_crispy_field }}
-        </div>
+</div>
+<!--TODO сделать редактор изображений-->
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.logo|as_crispy_field }}
     </div>
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.banner_image|as_crispy_field }}
-        </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.banner_image|as_crispy_field }}
     </div>
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.gallery|as_crispy_field }}
-        </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.gallery|as_crispy_field }}
     </div>
-    <div class="form-row">
-        <div class="col-md-12">
-            {% show_halls_table %}
-        </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {% show_halls_table %}
     </div>
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.seo_block|as_crispy_field }}
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
+</div>
