@@ -38,6 +38,11 @@ def show_side_menu():
     return {'menu': menu}
 
 
+@register.inclusion_tag('admin_lte/base/add_button.html')
+def add_button(form_url):
+    return {'form_url': form_url}
+
+
 @register.inclusion_tag('admin_lte/cinema/halls.html')
 def show_halls_table():
     pass
