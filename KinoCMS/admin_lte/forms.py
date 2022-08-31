@@ -1,40 +1,10 @@
+from collections import OrderedDict
+
+from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
 
 from .utils import CITIES, LANGS, GENDERS
-
-
-class CinemaForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['logo'].empty_label = 'Логотип не выбран'
-        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
-
-    class Meta:
-        model = apps.get_model('cinema', 'CinemaModel')
-        fields = ['name', 'description', 'condition', 'logo', 'banner_image', 'gallery', 'seo_block']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название кинотеатра'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание кинотеатра'}),
-            'condition': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Условия кинотеатра'})
-        }
-
-
-class HallForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['cinema'].empty_label = 'Кинотеатр не выбран'
-        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
-
-    class Meta:
-        model = apps.get_model('cinema', 'HallModel')
-        fields = ['name', 'description', 'hall_scheme', 'cinema', 'banner_image', 'gallery', 'seo_block']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Номер зала'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание зала'})
-        }
 
 
 class SEOForm(forms.ModelForm):
@@ -55,6 +25,56 @@ class GalleryForm(forms.ModelForm):
         fields = ['name', 'image']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название изображения'})
+        }
+
+
+class CinemaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['logo'].empty_label = 'Логотип не выбран'
+        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
+        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
+
+    class Meta:
+        model = apps.get_model('cinema', 'CinemaModel')
+        fields = ['name', 'description', 'condition', 'logo', 'banner_image', 'gallery', 'seo_block']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название кинотеатра'}),
+            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание кинотеатра'}),
+            'condition': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Условия кинотеатра'})
+        }
+
+
+class CinemaMultiForm(MultiModelForm):
+    form_classes = {
+        'cinema': CinemaForm,
+        'seo': SEOForm
+    }
+
+    def save(self, commit=True):
+        objects = super(CinemaMultiForm, self).save(commit=False)
+        if commit:
+            seo = objects['seo']
+            seo.save()
+            cinema = objects['cinema']
+            cinema.seo_block = seo
+            cinema.save()
+        return objects
+
+
+class HallForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cinema'].empty_label = 'Кинотеатр не выбран'
+        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
+        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
+
+    class Meta:
+        model = apps.get_model('cinema', 'HallModel')
+        fields = ['name', 'description', 'hall_scheme', 'cinema', 'banner_image', 'gallery', 'seo_block']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Номер зала'}),
+            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание зала'})
         }
 
 

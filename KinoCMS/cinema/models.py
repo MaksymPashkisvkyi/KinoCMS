@@ -32,12 +32,13 @@ class CinemaModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название кинотеатра')
     description = models.TextField(verbose_name='Описание')
     condition = models.TextField(verbose_name='Условия')
-    logo = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='cinema_logo', verbose_name='Логотип')
+    logo = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='cinema_logo',
+                             verbose_name='Логотип')
     banner_image = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='cinema_banner_image',
                                      verbose_name='Фото верхнего баннера')
     gallery = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='cinema_gallery',
                                 verbose_name='Галерея картинок')
-    seo_block = models.OneToOneField('SEOModel', on_delete=models.PROTECT, verbose_name='SEO блок')
+    seo_block = models.OneToOneField('SEOModel', blank=True, on_delete=models.CASCADE, verbose_name='SEO блок')
 
     def __str__(self):
         return self.name
@@ -52,7 +53,7 @@ class HallModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Номер зала')
     description = models.TextField(verbose_name='Описание зала')
     hall_scheme = models.FileField(verbose_name='Схема зала')
-    cinema = models.ForeignKey('CinemaModel', on_delete=models.PROTECT, verbose_name='Кинотеатр')
+    cinema = models.ForeignKey('CinemaModel', on_delete=models.CASCADE, verbose_name='Кинотеатр')
     banner_image = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='hall_banner_image',
                                      verbose_name='Верхний баннер')
     gallery = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='hall_gallery',

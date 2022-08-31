@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.apps import apps
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
-from django.apps import apps
 
-from .forms import CinemaForm, HallForm, UserForm, FilmForm
+from .forms import HallForm, UserForm, FilmForm, CinemaForm, CinemaMultiForm, SEOForm
 
 
 def admin_statistic(request):
@@ -14,48 +15,60 @@ def admin_statistic(request):
     return render(request, template_name, context)
 
 
+# ____________________Cinema____________________ #
+
 class AdminCinemaView(TemplateView):
     template_name = 'admin_lte/cinema/cinemas.html'
 
     def get_context_data(self, **kwargs):
         model = apps.get_model('cinema', 'CinemaModel')
-
         context = super().get_context_data()
         context['title'] = 'Кинотеатры'
         context['admin_edit_cinema'] = 'admin_edit_cinema'
         context['admin_delete_cinema'] = 'admin_delete_cinema'
         context['cinemas'] = model.objects.all()
-
         return context
 
 
 class AddCinemaView(CreateView):
-    form_class = CinemaForm
-    template_name = 'admin_lte/cinema/add_cinema.html'
+    form_class = CinemaMultiForm
+    model = apps.get_model('cinema', 'CinemaModel')
     success_url = reverse_lazy('admin_cinema')
+    template_name = 'admin_lte/cinema/add_edit_cinema.html'
 
     def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'HallModel')
+        hall_model = apps.get_model('cinema', 'HallModel')
         context = super().get_context_data()
         context['title'] = 'Добавить кинотеатр'
-        context['halls'] = model.objects.all()
+        context['halls'] = hall_model.objects.all()
         return context
+
+    def form_valid(self, form):
+        seo = form['seo'].save()
+        cinema = form['cinema'].save(commit=False)
+        cinema.seo_block = seo
+        cinema.save()
+        return redirect('admin_cinema')
 
 
 class EditCinemaView(UpdateView):
+    form_class = CinemaMultiForm
     model = apps.get_model('cinema', 'CinemaModel')
-    form_class = CinemaForm
-    template_name = 'admin_lte/cinema/edit_cinema.html'
     success_url = reverse_lazy('admin_cinema')
+    template_name = 'admin_lte/cinema/add_edit_cinema.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(EditCinemaView, self).get_form_kwargs()
+        kwargs.update(instance={
+            'cinema': self.object,
+            'seo': self.object.seo_block,
+        })
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['title'] = 'Редактировать кинотеатр'
         return context
-
-    def get_queryset(self):
-        model = apps.get_model('cinema', 'CinemaModel')
-        return model.objects.filter(pk=self.kwargs['pk'])
 
 
 class DeleteCinemaView(DeleteView):
@@ -67,9 +80,12 @@ class DeleteCinemaView(DeleteView):
         model = apps.get_model('cinema', 'CinemaModel')
         context = super().get_context_data()
         context['cinema'] = model.objects.get(pk=self.kwargs['pk'])
+        print(self.kwargs)
         context['title'] = 'Удалить кинотеатр'
         return context
 
+
+# ____________________Cinema____________________ #
 
 class AddHallView(CreateView):
     form_class = HallForm

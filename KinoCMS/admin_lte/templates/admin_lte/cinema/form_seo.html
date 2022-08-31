@@ -1,0 +1,37 @@
+{% load crispy_forms_tags %}
+
+{% if form.errors %}
+{% for field in form %}
+{% for error in field.errors %}
+<div class="form-error">
+    {{ error }}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+<div class="form-row">
+    <div class="col-md-4">
+        <h5>SEO блок:</h5>
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.URL|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.title|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {{ form.keywords|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {{ form.description|as_crispy_field }}
+    </div>
+</div>
