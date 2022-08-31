@@ -46,3 +46,13 @@ def show_halls_table():
 @register.inclusion_tag('admin_lte/cinema/form_cinema.html')
 def show_form_cinema(form):
     return {'form': form}
+
+
+@register.inclusion_tag('admin_lte/user/form_user.html')
+def show_form_user(form):
+    return {'form': form}
+
+
+@register.inclusion_tag('admin_lte/cinema/form_seo.html')
+def show_form_seo(form):
+    return {'form': form}
