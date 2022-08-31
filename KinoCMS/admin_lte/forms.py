@@ -45,23 +45,6 @@ class CinemaForm(forms.ModelForm):
         }
 
 
-class CinemaMultiForm(MultiModelForm):
-    form_classes = {
-        'cinema': CinemaForm,
-        'seo': SEOForm
-    }
-
-    def save(self, commit=True):
-        objects = super(CinemaMultiForm, self).save(commit=False)
-        if commit:
-            seo = objects['seo']
-            seo.save()
-            cinema = objects['cinema']
-            cinema.seo_block = seo
-            cinema.save()
-        return objects
-
-
 class HallForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -114,3 +97,37 @@ class FilmForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание фильма'}),
             'URL': forms.URLInput(attrs={'placeholder': 'Ссылка на фильм'})
         }
+
+
+class CinemaMultiForm(MultiModelForm):
+    form_classes = {
+        'cinema': CinemaForm,
+        'seo': SEOForm
+    }
+
+    def save(self, commit=True):
+        objects = super(CinemaMultiForm, self).save(commit=False)
+        if commit:
+            seo = objects['seo']
+            seo.save()
+            cinema = objects['cinema']
+            cinema.seo_block = seo
+            cinema.save()
+        return objects
+
+
+class HallMultiForm(MultiModelForm):
+    form_classes = {
+        'hall': HallForm,
+        'seo': SEOForm
+    }
+
+    def save(self, commit=True):
+        objects = super(HallMultiForm, self).save(commit=False)
+        if commit:
+            seo = objects['seo']
+            seo.save()
+            hall = objects['hall']
+            hall.seo_block = seo
+            hall.save()
+        return objects

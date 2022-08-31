@@ -44,12 +44,17 @@ def add_button(form_url):
 
 
 @register.inclusion_tag('admin_lte/cinema/halls.html')
-def show_halls_table():
-    pass
+def show_halls_table(halls):
+    return {'halls': halls}
 
 
 @register.inclusion_tag('admin_lte/cinema/form_cinema.html')
 def show_form_cinema(form):
+    return {'form': form}
+
+
+@register.inclusion_tag('admin_lte/cinema/form_hall.html')
+def show_form_hall(form):
     return {'form': form}
 
 

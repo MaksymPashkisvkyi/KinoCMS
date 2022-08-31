@@ -52,13 +52,13 @@ class CinemaModel(models.Model):
 class HallModel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Номер зала')
     description = models.TextField(verbose_name='Описание зала')
-    hall_scheme = models.FileField(verbose_name='Схема зала')
+    hall_scheme = models.FileField(verbose_name='Схема зала', blank=True)
     cinema = models.ForeignKey('CinemaModel', on_delete=models.CASCADE, verbose_name='Кинотеатр')
     banner_image = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='hall_banner_image',
                                      verbose_name='Верхний баннер')
     gallery = models.ForeignKey('GalleryModel', on_delete=models.PROTECT, related_name='hall_gallery',
                                 verbose_name='Галерея картинок')
-    seo_block = models.OneToOneField('SEOModel', on_delete=models.PROTECT, verbose_name='SEO блок')
+    seo_block = models.OneToOneField('SEOModel', blank=True, on_delete=models.PROTECT, verbose_name='SEO блок')
 
     def __str__(self):
         return self.name
@@ -80,7 +80,7 @@ class FilmModel(models.Model):
     three_D = models.BooleanField(verbose_name='3D')
     two_D = models.BooleanField(verbose_name='2D')
     IMAX = models.BooleanField()
-    seo_block = models.OneToOneField('SEOModel', on_delete=models.PROTECT, verbose_name='SEO блок')
+    seo_block = models.OneToOneField('SEOModel', blank=True, on_delete=models.PROTECT, verbose_name='SEO блок')
 
     def __str__(self):
         return self.name
