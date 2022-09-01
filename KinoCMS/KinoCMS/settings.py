@@ -38,7 +38,6 @@ INSTALLED_APPS = [
 
     'cinema.apps.CinemaConfig',
     'user.apps.UserConfig',
-    'pages.apps.PagesConfig',
     'banners.apps.BannersConfig',
     'admin_lte.apps.AdminLteConfig',
 

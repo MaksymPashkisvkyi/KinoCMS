@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', include('admin_lte.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
 
-    path('', include('pages.urls')),
+    path('', include('cinema.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
