@@ -10,7 +10,7 @@
   <component name="PyNamespacePackagesService">
     <option name="namespacePackageFolders">
       <list>
-        <option value="$MODULE_DIR$/KinoCMS/pages/templatetags" />
+        <option value="$MODULE_DIR$/KinoCMS/cinema/templatetags" />
       </list>
     </option>
   </component>
