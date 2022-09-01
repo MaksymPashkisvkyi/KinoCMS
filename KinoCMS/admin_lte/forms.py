@@ -5,55 +5,95 @@ from django.apps import apps
 from .utils import CITIES, GENDERS, LANGS
 
 
-class SEOForm(forms.ModelForm):
+class SeoForm(forms.ModelForm):
     class Meta:
-        model = apps.get_model('cinema', 'SEOModel')
-        fields = ['URL', 'title', 'keywords', 'description']
+        model = apps.get_model('cinema', 'SeoModel')
+        fields = ['url', 'title', 'keywords', 'description']
         widgets = {
-            'URL': forms.URLInput(attrs={'placeholder': 'Ссылка на страницу'}),
-            'title': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Оглавление'}),
-            'keywords': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Ключевые слова'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание блока'})
+            'url': forms.URLInput(attrs={
+                'placeholder': 'Ссылка на страницу'
+            }),
+            'title': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Оглавление'
+            }),
+            'keywords': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Ключевые слова'
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Описание блока'
+            })
+        }
+        labels = {
+            'title': 'Заголовок',
+            'url': 'URL-адрес',
+            'keywords': 'Ключевые слова',
+            'description': 'Описание',
         }
 
 
 class GalleryForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'GalleryModel')
-        fields = ['name', 'image']
+        fields = ['title', 'image']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название изображения'})
+            'title': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Название изображения'
+            })
         }
 
 
 class CinemaForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['logo'].empty_label = 'Логотип не выбран'
-        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-
     class Meta:
         model = apps.get_model('cinema', 'CinemaModel')
-        fields = ['name', 'description', 'condition', 'logo', 'banner_image', 'gallery']
+        fields = ['title', 'description', 'condition', 'logo', 'banner', 'gallery']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название кинотеатра'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание кинотеатра'}),
-            'condition': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Условия кинотеатра'})
+            'title': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Название кинотеатра'
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Описание кинотеатра'
+            }),
+            'condition': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Условия кинотеатра'
+            })
+        }
+        labels = {
+            'title': 'Название кинотеатра',
+            'description': 'Описание',
+            'condition': 'Условия',
+            'logo': 'Логотип',
+            'banner': 'Фото верхнего баннера',
+            'gallery': 'Галерея картинок'
         }
 
 
 class HallForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['cinema'].empty_label = 'Кинотеатр не выбран'
-        self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-
     class Meta:
         model = apps.get_model('cinema', 'HallModel')
-        fields = ['name', 'description', 'hall_scheme', 'cinema', 'banner_image', 'gallery']
+        fields = ['title', 'description', 'hall_scheme', 'banner', 'gallery']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Номер зала'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание зала'})
+            'title': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Номер зала'
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Описание зала'
+            })
+        }
+        labels = {
+            'title': 'Номер зала',
+            'description': 'Описание зала',
+            'hall_scheme': 'Схема зала',
+            'banner': 'Верхний баннер',
+            'gallery': 'Галерея картинок'
         }
 
 
@@ -63,41 +103,96 @@ class UserForm(forms.ModelForm):
         fields = ['name', 'surname', 'nickname', 'email', 'address', 'password', 'repeat_password', 'card_number',
                   'language', 'gender', 'phone', 'date', 'city']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Имя'}),
-            'surname': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Фамилия'}),
-            'nickname': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Псевдоним'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
-            'address': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Адресс'}),
-            'password': forms.PasswordInput(attrs={'placeholder': ''}),
-            'repeat_password': forms.PasswordInput(attrs={'placeholder': ''}),
-            'card_number': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Номер карты'}),
+            'name': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Имя'
+            }),
+            'surname': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Фамилия'
+            }),
+            'nickname': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Псевдоним'
+            }),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Email'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Адресс'
+            }),
+            'password': forms.PasswordInput(attrs={
+                'placeholder': ''
+            }),
+            'repeat_password': forms.PasswordInput(attrs={
+                'placeholder': ''
+            }),
+            'card_number': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Номер карты'
+            }),
             'language': forms.RadioSelect(choices=LANGS),
             'gender': forms.RadioSelect(choices=GENDERS),
-            'phone': forms.TextInput(attrs={'class': 'form-input', 'placeholder': '+380-00-00-00-000'}),
-            'date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'Дата рождения'}),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': '+380-00-00-00-000'
+            }),
+            'date': forms.DateInput(attrs={
+                'type': 'date',
+                'placeholder': 'Дата рождения'
+            }),
             'city': forms.Select(choices=CITIES),
+        }
+        labels = {
+            'name': 'Имя',
+            'surname': 'Фамилия',
+            'nickname': 'Псевдоним',
+            'address': 'E-mail',
+            'email': 'Адресс',
+            'password': 'Пароль',
+            'repeat_password': 'Повторить пароль',
+            'card_number': 'Номер карты',
+            'gender': 'Пол',
+            'phone': 'Телефон',
+            'date': 'Дата рождения',
+            'city': 'Город',
         }
 
 
 class FilmForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['main_image'].empty_label = 'Главное изображение не выбрано'
-
     class Meta:
         model = apps.get_model('cinema', 'FilmModel')
-        fields = ['name', 'description', 'main_image', 'gallery', 'URL', 'three_D', 'two_D', 'IMAX']
+        fields = ['title', 'description', 'poster', 'gallery', 'url', 'is_3d', 'is_2d', 'is_imax']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название фильма'}),
-            'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание фильма'}),
-            'URL': forms.URLInput(attrs={'placeholder': 'Ссылка на фильм'})
+            'title': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Название фильма'
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Описание фильма'
+            }),
+            'url': forms.URLInput(attrs={
+                'placeholder': 'Ссылка на видео в YouTube'
+            })
+        }
+        labels = {
+            'title': 'Название фильма',
+            'description': 'Описание',
+            'poster': 'Главная картинка',
+            'gallery': 'Галерея картинок',
+            'url': 'Ссылка на трейлер',
+            'is_3d': '3D',
+            'is_2d': '2D',
+            'is_imax': 'IMAX'
         }
 
 
 class CinemaMultiForm(MultiModelForm):
     form_classes = {
         'cinema': CinemaForm,
-        'seo': SEOForm
+        'seo': SeoForm
     }
 
     def save(self, commit=True):
@@ -114,7 +209,7 @@ class CinemaMultiForm(MultiModelForm):
 class HallMultiForm(MultiModelForm):
     form_classes = {
         'hall': HallForm,
-        'seo': SEOForm
+        'seo': SeoForm
     }
 
     def save(self, commit=True):

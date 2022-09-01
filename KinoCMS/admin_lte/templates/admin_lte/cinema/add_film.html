@@ -7,7 +7,7 @@
     {% csrf_token %}
     <div class="form-row">
         <div class="col-md-4">
-            {{ form.name|as_crispy_field }}
+            {{ form.title|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
@@ -17,7 +17,7 @@
     </div>
     <div class="form-row">
         <div class="col-md-4">
-            {{ form.main_image|as_crispy_field }}
+            {{ form.poster|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
@@ -27,7 +27,7 @@
     </div>
     <div class="form-row">
         <div class="col-md-4">
-            {{ form.URL|as_crispy_field }}
+            {{ form.url|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
@@ -35,18 +35,13 @@
             <strong>Типы кино*</strong>
         </div>
         <div class="col-md-1">
-            {{ form.three_D|as_crispy_field }}
+            {{ form.is_3d|as_crispy_field }}
         </div>
         <div class="col-md-1">
-            {{ form.two_D|as_crispy_field }}
+            {{ form.is_2d|as_crispy_field }}
         </div>
         <div class="col-md-1">
-            {{ form.IMAX|as_crispy_field }}
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-4">
-            {{ form.seo_block|as_crispy_field }}
+            {{ form.is_imax|as_crispy_field }}
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Сохранить</button>
