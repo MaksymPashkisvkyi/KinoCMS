@@ -1,10 +1,11 @@
 from django.apps import apps
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import (CreateView, DeleteView, TemplateView,
+                                  UpdateView)
 
-from .forms import UserForm, FilmForm, CinemaMultiForm, HallMultiForm
+from .forms import CinemaMultiForm, FilmForm, HallMultiForm, UserForm
 
 
 def admin_statistic(request):

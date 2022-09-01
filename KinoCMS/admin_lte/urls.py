@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import admin_statistic, \
-    AdminCinemaView, AddCinemaView, EditCinemaView, DeleteCinemaView, \
-    AdminFilmView, AddFilmView, EditFilmView, DeleteFilmView, \
-    AdminUserView, AddUserView, EditUserView, DeleteUserView, \
-    AdminBannerView, \
-    AddHallView, EditHallView, DeleteHallView
+
+from .views import (AddCinemaView, AddFilmView, AddHallView, AddUserView,
+                    AdminBannerView, AdminCinemaView, AdminFilmView,
+                    AdminUserView, DeleteCinemaView, DeleteFilmView,
+                    DeleteHallView, DeleteUserView, EditCinemaView,
+                    EditFilmView, EditHallView, EditUserView, admin_statistic)
 
 urlpatterns = [
     path('', admin_statistic, name='admin_statistic'),

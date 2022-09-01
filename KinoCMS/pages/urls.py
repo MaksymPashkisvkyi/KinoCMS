@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import MainPageView, PosterView, SoonView, ScheduleView, CinemasView, PromoView, ContactsView, CafeView, \
-    MobileAppsView, AdvertisementView, AboutView, NewsView
+from .views import (AboutView, AdvertisementView, CafeView, CinemasView,
+                    ContactsView, MainPageView, MobileAppsView, NewsView,
+                    PosterView, PromoView, ScheduleView, SoonView)
 
 urlpatterns = [
     path('', MainPageView.as_view(), name='main'),

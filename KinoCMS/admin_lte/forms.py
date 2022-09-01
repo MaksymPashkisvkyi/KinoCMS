@@ -2,7 +2,7 @@ from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
 
-from .utils import CITIES, LANGS, GENDERS
+from .utils import CITIES, GENDERS, LANGS
 
 
 class SEOForm(forms.ModelForm):
