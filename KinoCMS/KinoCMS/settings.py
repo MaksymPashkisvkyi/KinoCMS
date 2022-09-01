@@ -35,13 +35,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'cinema.apps.CinemaConfig',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
     'banners.apps.BannersConfig',
     'admin_lte.apps.AdminLteConfig',
+
     'bootstrap4',
     'crispy_forms',
+    'django_cleanup',
+    'easy_thumbnails',
+    'betterforms',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -133,3 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'images')
 MEDIA_URL = '/media/'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
