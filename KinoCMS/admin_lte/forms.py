@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
@@ -33,11 +31,10 @@ class CinemaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['logo'].empty_label = 'Логотип не выбран'
         self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
 
     class Meta:
         model = apps.get_model('cinema', 'CinemaModel')
-        fields = ['name', 'description', 'condition', 'logo', 'banner_image', 'gallery', 'seo_block']
+        fields = ['name', 'description', 'condition', 'logo', 'banner_image', 'gallery']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название кинотеатра'}),
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание кинотеатра'}),
@@ -50,11 +47,10 @@ class HallForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['cinema'].empty_label = 'Кинотеатр не выбран'
         self.fields['banner_image'].empty_label = 'Фото верхнего баннера не выбрано'
-        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
 
     class Meta:
         model = apps.get_model('cinema', 'HallModel')
-        fields = ['name', 'description', 'hall_scheme', 'cinema', 'banner_image', 'gallery', 'seo_block']
+        fields = ['name', 'description', 'hall_scheme', 'cinema', 'banner_image', 'gallery']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Номер зала'}),
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание зала'})
@@ -87,11 +83,10 @@ class FilmForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['main_image'].empty_label = 'Главное изображение не выбрано'
-        self.fields['seo_block'].empty_label = 'SEO блок не выбран'
 
     class Meta:
         model = apps.get_model('cinema', 'FilmModel')
-        fields = ['name', 'description', 'main_image', 'gallery', 'URL', 'three_D', 'two_D', 'IMAX', 'seo_block']
+        fields = ['name', 'description', 'main_image', 'gallery', 'URL', 'three_D', 'two_D', 'IMAX']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название фильма'}),
             'description': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Описание фильма'}),
