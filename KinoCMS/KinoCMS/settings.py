@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'django_cleanup',
-    'easy_thumbnails',
     'betterforms',
     'debug_toolbar'
 ]
