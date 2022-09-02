@@ -19,12 +19,12 @@ def admin_statistic(request):
 # ____________________Cinema____________________ #
 
 class AdminCinemaView(TemplateView):
-    template_name = 'admin_lte/cinema/cinemas.html'
+    template_name = 'admin_lte/cinema/cinema_list.html'
 
     def get_context_data(self, **kwargs):
         model = apps.get_model('cinema', 'CinemaModel')
         context = super().get_context_data()
-        context['title'] = 'Кинотеатры'
+        context['title'] = 'Список кинотеатров'
         context['admin_edit_cinema'] = 'admin_edit_cinema'
         context['admin_delete_cinema'] = 'admin_delete_cinema'
         context['cinemas'] = model.objects.all()
@@ -49,7 +49,7 @@ class AddCinemaView(CreateView):
     def form_valid(self, form):
         seo = form['seo'].save()
         cinema = form['cinema'].save(commit=False)
-        cinema.seo_block = seo
+        cinema.seo = seo
         cinema.save()
         return redirect('admin_cinema')
 
@@ -64,7 +64,7 @@ class EditCinemaView(UpdateView):
         kwargs = super(EditCinemaView, self).get_form_kwargs()
         kwargs.update(instance={
             'cinema': self.object,
-            'seo': self.object.seo_block,
+            'seo': self.object.seo,
         })
         return kwargs
 
@@ -80,7 +80,7 @@ class EditCinemaView(UpdateView):
 
 class DeleteCinemaView(DeleteView):
     model = apps.get_model('cinema', 'CinemaModel')
-    seo_model = apps.get_model('cinema', 'SEOModel')
+    seo_model = apps.get_model('cinema', 'SeoModel')
     success_url = reverse_lazy('admin_cinema')
     template_name = 'admin_lte/cinema/delete_cinema.html'
 
@@ -91,7 +91,7 @@ class DeleteCinemaView(DeleteView):
         return context
 
     def form_valid(self, form):
-        seo = self.seo_model.objects.get(pk=self.object.seo_block.pk)
+        seo = self.seo_model.objects.get(pk=self.object.seo.pk)
         self.object.delete()
         seo.delete()
         return HttpResponseRedirect(self.get_success_url())
