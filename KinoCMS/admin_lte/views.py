@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView)
 
-from .forms import CinemaMultiForm, FilmForm, HallMultiForm, UserForm
+from .forms import CinemaMultiForm, HallMultiForm, UserForm, FilmMultiForm
 
 
 def admin_statistic(request):
@@ -115,7 +115,7 @@ class AddHallView(CreateView):
     def form_valid(self, form):
         seo = form['seo'].save()
         hall = form['hall'].save(commit=False)
-        hall.seo_block = seo
+        hall.seo = seo
         hall.save()
         return redirect('admin_add_cinema')
 
@@ -130,7 +130,7 @@ class EditHallView(UpdateView):
         kwargs = super(EditHallView, self).get_form_kwargs()
         kwargs.update(instance={
             'hall': self.object,
-            'seo': self.object.seo_block,
+            'seo': self.object.seo,
         })
         return kwargs
 
@@ -142,7 +142,7 @@ class EditHallView(UpdateView):
 
 class DeleteHallView(DeleteView):
     model = apps.get_model('cinema', 'HallModel')
-    seo_model = apps.get_model('cinema', 'SEOModel')
+    seo_model = apps.get_model('cinema', 'SeoModel')
     success_url = reverse_lazy('admin_add_cinema')
     template_name = 'admin_lte/cinema/delete_hall.html'
 
@@ -153,7 +153,7 @@ class DeleteHallView(DeleteView):
         return context
 
     def form_valid(self, form):
-        seo = self.seo_model.objects.get(pk=self.object.seo_block.pk)
+        seo = self.seo_model.objects.get(pk=self.object.seo.pk)
         self.object.delete()
         seo.delete()
         return HttpResponseRedirect(self.get_success_url())
@@ -165,21 +165,19 @@ class DeleteHallView(DeleteView):
 # ____________________Film____________________ #
 
 class AdminFilmView(TemplateView):
-    template_name = 'admin_lte/cinema/films.html'
+    template_name = 'admin_lte/cinema/film_list.html'
 
     def get_context_data(self, **kwargs):
         model = apps.get_model('cinema', 'FilmModel')
-
         context = super().get_context_data()
         context['title'] = 'Фильмы'
         context['films'] = model.objects.all()
-
         return context
 
 
 class AddFilmView(CreateView):
-    form_class = FilmForm
-    template_name = 'admin_lte/cinema/add_film.html'
+    form_class = FilmMultiForm
+    template_name = 'admin_lte/cinema/add_edit_film.html'
     success_url = reverse_lazy('admin_film')
 
     def get_context_data(self, **kwargs):
@@ -187,13 +185,51 @@ class AddFilmView(CreateView):
         context['title'] = 'Добавить фильм'
         return context
 
+    def form_valid(self, form):
+        seo = form['seo'].save()
+        film = form['film'].save(commit=False)
+        film.seo = seo
+        film.save()
+        return redirect('admin_film')
+
 
 class EditFilmView(UpdateView):
-    pass
+    form_class = FilmMultiForm
+    model = apps.get_model('cinema', 'FilmModel')
+    template_name = 'admin_lte/cinema/add_edit_film.html'
+    success_url = reverse_lazy('admin_film')
+
+    def get_form_kwargs(self):
+        kwargs = super(EditFilmView, self).get_form_kwargs()
+        kwargs.update(instance={
+            'film': self.object,
+            'seo': self.object.seo,
+        })
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Редактировать фильм'
+        return context
 
 
 class DeleteFilmView(DeleteView):
-    pass
+    model = apps.get_model('cinema', 'FilmModel')
+    seo_model = apps.get_model('cinema', 'SeoModel')
+    success_url = reverse_lazy('admin_film')
+    template_name = 'admin_lte/cinema/delete_film.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['film'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['title'] = 'Удалить фильм'
+        return context
+
+    def form_valid(self, form):
+        seo = self.seo_model.objects.get(pk=self.object.seo.pk)
+        self.object.delete()
+        seo.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 # ____________________Film____________________ #

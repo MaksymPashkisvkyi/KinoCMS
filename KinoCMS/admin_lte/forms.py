@@ -1,6 +1,7 @@
 from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
+from tempus_dominus.widgets import DatePicker
 
 from .utils import CITIES, GENDERS, LANGS
 
@@ -17,8 +18,8 @@ class SeoForm(forms.ModelForm):
                 'class': 'form-input',
                 'placeholder': 'Оглавление'
             }),
-            'keywords': forms.Textarea(attrs={
-                'rows': 5,
+            'keywords': forms.TextInput(attrs={
+                'class': 'form-input',
                 'placeholder': 'Ключевые слова'
             }),
             'description': forms.Textarea(attrs={
@@ -163,7 +164,8 @@ class UserForm(forms.ModelForm):
 class FilmForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'FilmModel')
-        fields = ['title', 'description', 'poster', 'gallery', 'url', 'is_3d', 'is_2d', 'is_imax']
+        fields = ['title', 'description', 'poster', 'gallery', 'url', 'release_date', 'is_active', 'is_3d', 'is_2d',
+                  'is_imax']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input',
@@ -175,7 +177,17 @@ class FilmForm(forms.ModelForm):
             }),
             'url': forms.URLInput(attrs={
                 'placeholder': 'Ссылка на видео в YouTube'
-            })
+            }),
+            'release_date': DatePicker(
+                options={
+                    'useCurrent': True,
+                    'collapse': False,
+                },
+                attrs={
+                    'append': 'fa fa-calendar',
+                    'icon_toggle': True,
+                }
+            )
         }
         labels = {
             'title': 'Название фильма',
@@ -183,6 +195,8 @@ class FilmForm(forms.ModelForm):
             'poster': 'Главная картинка',
             'gallery': 'Галерея картинок',
             'url': 'Ссылка на трейлер',
+            'release_date': 'Начало показов',
+            'is_active': 'Активно',
             'is_3d': '3D',
             'is_2d': '2D',
             'is_imax': 'IMAX'
@@ -201,7 +215,7 @@ class CinemaMultiForm(MultiModelForm):
             seo = objects['seo']
             seo.save()
             cinema = objects['cinema']
-            cinema.seo_block = seo
+            cinema.seo = seo
             cinema.save()
         return objects
 
@@ -218,6 +232,23 @@ class HallMultiForm(MultiModelForm):
             seo = objects['seo']
             seo.save()
             hall = objects['hall']
-            hall.seo_block = seo
+            hall.seo = seo
             hall.save()
+        return objects
+
+
+class FilmMultiForm(MultiModelForm):
+    form_classes = {
+        'film': FilmForm,
+        'seo': SeoForm
+    }
+
+    def save(self, commit=True):
+        objects = super(FilmMultiForm, self).save(commit=False)
+        if commit:
+            seo = objects['seo']
+            seo.save()
+            film = objects['film']
+            film.seo = seo
+            film.save()
         return objects

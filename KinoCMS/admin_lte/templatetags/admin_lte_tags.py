@@ -53,6 +53,11 @@ def show_form_cinema(form):
     return {'form': form}
 
 
+@register.inclusion_tag('admin_lte/cinema/form_film.html')
+def show_form_film(form):
+    return {'form': form}
+
+
 @register.inclusion_tag('admin_lte/cinema/form_hall.html')
 def show_form_hall(form):
     return {'form': form}

@@ -1,0 +1,66 @@
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+
+<head>
+    {{ form.media }}
+</head>
+
+{% if form.errors %}
+{% for field in form %}
+{% for error in field.errors %}
+<div class="form-error">
+    {{ error }} {{ field }}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.title|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-12">
+        {{ form.description|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.poster|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.gallery|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.url|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-1">
+        <strong>Типы кино*</strong>
+    </div>
+    <div class="col-md-1">
+        {{ form.is_3d|as_crispy_field }}
+    </div>
+    <div class="col-md-1">
+        {{ form.is_2d|as_crispy_field }}
+    </div>
+    <div class="col-md-1">
+        {{ form.is_imax|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-1">
+        {{ form.is_active|as_crispy_field }}
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-md-4">
+        {{ form.release_date|as_crispy_field }}
+    </div>
+</div>

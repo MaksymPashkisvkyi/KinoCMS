@@ -59,7 +59,6 @@ class FilmModel(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     url = models.URLField()
-    time_created = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField()
     is_2d = models.BooleanField()
     is_3d = models.BooleanField()

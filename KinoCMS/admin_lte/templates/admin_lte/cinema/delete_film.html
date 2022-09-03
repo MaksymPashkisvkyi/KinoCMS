@@ -7,9 +7,9 @@
 <form method="post">
     {% csrf_token %}
     <p>
-        {{ film.name }}
+        {{ film.title }}
     </p>
-    <button onclick="return confirm('Вы хотите удалить {{ film.name }}?');" type="submit" class="btn btn-primary">
+    <button onclick="return confirm('Вы хотите удалить {{ film.title }}?');" type="submit" class="btn btn-danger">
         Удалить
     </button>
 </form>
