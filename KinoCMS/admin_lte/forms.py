@@ -9,29 +9,29 @@ from .utils import CITIES, GENDERS, LANGS
 class SeoForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'SeoModel')
-        fields = ['url', 'title', 'keywords', 'description']
+        fields = ['seo_url', 'seo_title', 'seo_keywords', 'seo_description']
         widgets = {
-            'url': forms.URLInput(attrs={
+            'seo_url': forms.URLInput(attrs={
                 'placeholder': 'Ссылка на страницу'
             }),
-            'title': forms.TextInput(attrs={
+            'seo_title': forms.TextInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Оглавление'
             }),
-            'keywords': forms.TextInput(attrs={
+            'seo_keywords': forms.TextInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Ключевые слова'
             }),
-            'description': forms.Textarea(attrs={
+            'seo_description': forms.Textarea(attrs={
                 'rows': 5,
                 'placeholder': 'Описание блока'
             })
         }
         labels = {
-            'title': 'Заголовок',
-            'url': 'URL-адрес',
-            'keywords': 'Ключевые слова',
-            'description': 'Описание',
+            'seo_title': 'Заголовок',
+            'seo_url': 'URL-адрес',
+            'seo_keywords': 'Ключевые слова',
+            'seo_description': 'Описание',
         }
 
 
@@ -63,7 +63,9 @@ class CinemaForm(forms.ModelForm):
             'condition': forms.Textarea(attrs={
                 'rows': 5,
                 'placeholder': 'Условия кинотеатра'
-            })
+            }),
+            'logo': forms.FileInput(),
+            'banner': forms.FileInput()
         }
         labels = {
             'title': 'Название кинотеатра',

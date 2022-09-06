@@ -1,10 +1,10 @@
 from django.urls import path
 
-from .views import (AddCinemaView, AddFilmView, AddHallView, AddUserView,
+from .views import (AddFilmView, AddHallView, AddUserView,
                     AdminBannerView, AdminCinemaView, AdminFilmView,
                     AdminUserView, DeleteCinemaView, DeleteFilmView,
-                    DeleteHallView, DeleteUserView, EditCinemaView,
-                    EditFilmView, EditHallView, EditUserView, admin_statistic)
+                    DeleteHallView, DeleteUserView,
+                    EditFilmView, EditHallView, EditUserView, admin_statistic, add_cinema_view, edit_cinema_view)
 
 urlpatterns = [
     path('', admin_statistic, name='admin_statistic'),
@@ -12,8 +12,8 @@ urlpatterns = [
     path('banners/', AdminBannerView.as_view(), name='admin_banner'),
 
     path('cinemas/', AdminCinemaView.as_view(), name='admin_cinema'),
-    path('add_cinema/', AddCinemaView.as_view(), name='admin_add_cinema'),
-    path('edit_cinema/<int:pk>/', EditCinemaView.as_view(), name='admin_edit_cinema'),
+    path('add_cinema/', add_cinema_view, name='admin_add_cinema'),
+    path('edit_cinema/<int:pk>/', edit_cinema_view, name='admin_edit_cinema'),
     path('delete_cinema/<int:pk>/', DeleteCinemaView.as_view(), name='admin_delete_cinema'),
 
     path('users/', AdminUserView.as_view(), name='admin_user'),

@@ -1,12 +1,11 @@
 {% extends 'admin_lte/base/base.html' %}
 {% load admin_lte_tags %}
-{% load static %}
 {% block content %}
 
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for cinema in cinemas %}
+            {% for cinema in cinema_list %}
             <div class="col">
                 <div class="card shadow-sm">
                     <img class="card-img-top" style="width: 100%; height: 300px;"

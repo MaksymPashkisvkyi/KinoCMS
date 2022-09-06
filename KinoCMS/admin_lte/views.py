@@ -1,11 +1,11 @@
 from django.apps import apps
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
-                                  UpdateView)
+                                  UpdateView, ListView)
 
-from .forms import CinemaMultiForm, HallMultiForm, UserForm, FilmMultiForm
+from .forms import CinemaMultiForm, HallMultiForm, UserForm, FilmMultiForm, CinemaForm, SeoForm
 
 
 def admin_statistic(request):
@@ -18,71 +18,64 @@ def admin_statistic(request):
 
 # ____________________Cinema____________________ #
 
-class AdminCinemaView(TemplateView):
+class AdminCinemaView(ListView):
+    model = apps.get_model('cinema', 'CinemaModel')
     template_name = 'admin_lte/cinema/cinema_list.html'
 
     def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'CinemaModel')
         context = super().get_context_data()
         context['title'] = 'Список кинотеатров'
-        context['admin_edit_cinema'] = 'admin_edit_cinema'
-        context['admin_delete_cinema'] = 'admin_delete_cinema'
-        context['cinemas'] = model.objects.all()
+        context['cinema_list'] = self.model.objects.order_by('-pk')
         return context
 
 
-class AddCinemaView(CreateView):
-    form_class = CinemaMultiForm
+def add_cinema_view(request):
+    cinema = CinemaForm(request.POST or None, request.FILES or None)
+    seo = SeoForm(request.POST or None)
+
+    if request.method == 'POST':
+        if cinema.is_valid() and seo.is_valid():
+            cinema.save(commit=False)
+            seo.save()
+            cinema.instance.seo = seo.instance
+            cinema.save()
+            return redirect('admin_cinema')
+
+    context = {
+        'cinema': cinema,
+        'seo': seo,
+        'title': 'Добавить кинотеатр'
+    }
+    return render(request, 'admin_lte/cinema/cinema_add.html', context=context)
+
+
+def edit_cinema_view(request, pk):
     model = apps.get_model('cinema', 'CinemaModel')
-    success_url = reverse_lazy('admin_cinema')
-    template_name = 'admin_lte/cinema/add_edit_cinema.html'
-
-    def get_context_data(self, **kwargs):
-        hall_model = apps.get_model('cinema', 'HallModel')
-        context = super().get_context_data()
-        context['title'] = 'Добавить кинотеатр'
-        context['admin_edit_hall'] = 'admin_edit_hall'
-        context['admin_delete_hall'] = 'admin_delete_hall'
-        context['halls'] = hall_model.objects.all()
-        return context
-
-    def form_valid(self, form):
-        seo = form['seo'].save()
-        cinema = form['cinema'].save(commit=False)
-        cinema.seo = seo
-        cinema.save()
-        return redirect('admin_cinema')
-
-
-class EditCinemaView(UpdateView):
-    form_class = CinemaMultiForm
-    model = apps.get_model('cinema', 'CinemaModel')
-    success_url = reverse_lazy('admin_cinema')
-    template_name = 'admin_lte/cinema/add_edit_cinema.html'
-
-    def get_form_kwargs(self):
-        kwargs = super(EditCinemaView, self).get_form_kwargs()
-        kwargs.update(instance={
-            'cinema': self.object,
-            'seo': self.object.seo,
-        })
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        hall_model = apps.get_model('cinema', 'HallModel')
-        context = super().get_context_data()
-        context['title'] = 'Редактировать кинотеатр'
-        context['admin_edit_hall'] = 'admin_edit_hall'
-        context['admin_delete_hall'] = 'admin_delete_hall'
-        context['halls'] = hall_model.objects.all()
-        return context
+    obj = get_object_or_404(model, pk=pk)
+    cinema = CinemaForm(instance=obj)
+    seo = SeoForm(instance=obj.seo)
+    if request.method == 'POST':
+        cinema = CinemaForm(request.POST, request.FILES, instance=obj)
+        seo = SeoForm(request.POST, request.FILES, instance=obj.seo)
+        if cinema.is_valid() and seo.is_valid():
+            cinema.save(commit=False)
+            seo.save()
+            cinema.instance.seo = seo.instance
+            cinema.save()
+            return redirect('admin_cinema')
+    context = {
+        'cinema': cinema,
+        'seo': seo,
+        'title': 'Редактировать кинотеатр'
+    }
+    return render(request, 'admin_lte/cinema/cinema_edit.html', context)
 
 
 class DeleteCinemaView(DeleteView):
     model = apps.get_model('cinema', 'CinemaModel')
     seo_model = apps.get_model('cinema', 'SeoModel')
     success_url = reverse_lazy('admin_cinema')
-    template_name = 'admin_lte/cinema/delete_cinema.html'
+    template_name = 'admin_lte/cinema/cinema_delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -164,14 +157,14 @@ class DeleteHallView(DeleteView):
 
 # ____________________Film____________________ #
 
-class AdminFilmView(TemplateView):
+class AdminFilmView(ListView):
     template_name = 'admin_lte/cinema/film_list.html'
+    model = apps.get_model('cinema', 'FilmModel')
 
     def get_context_data(self, **kwargs):
-        model = apps.get_model('cinema', 'FilmModel')
         context = super().get_context_data()
         context['title'] = 'Фильмы'
-        context['films'] = model.objects.all()
+        context['films'] = self.model.objects.all()
         return context
 
 
