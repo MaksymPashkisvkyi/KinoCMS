@@ -5,15 +5,15 @@ from django.db import models
 
 
 class SeoModel(models.Model):
-    url = models.URLField()
-    title = models.CharField(max_length=50)
-    keywords = models.CharField(max_length=100)
-    description = models.TextField()
+    seo_url = models.URLField()
+    seo_title = models.CharField(max_length=50)
+    seo_keywords = models.CharField(max_length=100)
+    seo_description = models.TextField()
 
     # seo_text = models.TextField() TODO seo_text оставить в page или seo model?
 
     def __str__(self):
-        return self.title
+        return self.seo_title
 
 
 class GalleryModel(models.Model):
