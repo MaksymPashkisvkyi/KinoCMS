@@ -43,11 +43,6 @@ def add_button(form_url):
     return {'form_url': form_url}
 
 
-@register.inclusion_tag('admin_lte/cinema/form_film.html')
-def show_form_film(form):
-    return {'form': form}
-
-
 @register.inclusion_tag('admin_lte/cinema/form_hall.html')
 def show_form_hall(form):
     return {'form': form}

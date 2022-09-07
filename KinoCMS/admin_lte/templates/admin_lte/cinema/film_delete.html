@@ -1,0 +1,14 @@
+{% extends 'admin_lte/base/base.html' %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <p>
+        {{ form.title }}
+    </p>
+    <button onclick="return confirm('Вы хотите удалить {{ form.title }}?');" type="submit" class="btn btn-danger">
+        Удалить
+    </button>
+</form>
+
+{% endblock %}

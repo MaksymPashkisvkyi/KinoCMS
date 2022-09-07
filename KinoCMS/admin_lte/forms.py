@@ -1,7 +1,6 @@
 from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
-from tempus_dominus.widgets import DatePicker
 
 from .utils import CITIES, GENDERS, LANGS
 
@@ -180,16 +179,13 @@ class FilmForm(forms.ModelForm):
             'url': forms.URLInput(attrs={
                 'placeholder': 'Ссылка на видео в YouTube'
             }),
-            'release_date': DatePicker(
-                options={
-                    'useCurrent': True,
-                    'collapse': False,
-                },
+            'release_date': forms.DateInput(
+                format='%Y-%m-%d',
                 attrs={
-                    'append': 'fa fa-calendar',
-                    'icon_toggle': True,
-                }
-            )
+                    'class': 'form-control',
+                    'type': 'date'
+                }),
+            'poster': forms.FileInput()
         }
         labels = {
             'title': 'Название фильма',

@@ -1,3 +1,5 @@
+import datetime
+
 from django.apps import apps
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
@@ -5,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
-from .forms import CinemaMultiForm, HallMultiForm, UserForm, FilmMultiForm, CinemaForm, SeoForm
+from .forms import HallMultiForm, UserForm, CinemaForm, SeoForm, FilmForm
 
 
 def admin_statistic(request):
@@ -42,7 +44,7 @@ def add_cinema_view(request):
             return redirect('admin_cinema')
 
     context = {
-        'cinema': cinema,
+        'form': cinema,
         'seo': seo,
         'title': 'Добавить кинотеатр'
     }
@@ -64,7 +66,7 @@ def edit_cinema_view(request, pk):
             cinema.save()
             return redirect('admin_cinema')
     context = {
-        'cinema': cinema,
+        'form': cinema,
         'seo': seo,
         'title': 'Редактировать кинотеатр'
     }
@@ -79,7 +81,7 @@ class DeleteCinemaView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['cinema'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['form'] = self.model.objects.get(pk=self.kwargs['pk'])
         context['title'] = 'Удалить кинотеатр'
         return context
 
@@ -163,58 +165,64 @@ class AdminFilmView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['title'] = 'Фильмы'
-        context['films'] = self.model.objects.all()
+        context['title'] = 'Список фильмов'
+        context['film_actual'] = self.model.objects.filter(release_date__lte=datetime.date.today())
+        context['film_soon'] = self.model.objects.filter(release_date__gt=datetime.date.today())
         return context
 
 
-class AddFilmView(CreateView):
-    form_class = FilmMultiForm
-    template_name = 'admin_lte/cinema/add_edit_film.html'
-    success_url = reverse_lazy('admin_film')
+def add_film_view(request):
+    film = FilmForm(request.POST or None, request.FILES or None)
+    seo = SeoForm(request.POST or None)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Добавить фильм'
-        return context
+    if request.method == 'POST':
+        if film.is_valid() and seo.is_valid():
+            print(film.cleaned_data)
+            film.save(commit=False)
+            seo.save()
+            film.instance.seo = seo.instance
+            film.save()
+            return redirect('admin_film')
 
-    def form_valid(self, form):
-        seo = form['seo'].save()
-        film = form['film'].save(commit=False)
-        film.seo = seo
-        film.save()
-        return redirect('admin_film')
+    context = {
+        'form': film,
+        'seo': seo,
+        'title': 'Добавить фильм'
+    }
+    return render(request, 'admin_lte/cinema/film_add.html', context=context)
 
 
-class EditFilmView(UpdateView):
-    form_class = FilmMultiForm
+def edit_film_view(request, pk):
     model = apps.get_model('cinema', 'FilmModel')
-    template_name = 'admin_lte/cinema/add_edit_film.html'
-    success_url = reverse_lazy('admin_film')
-
-    def get_form_kwargs(self):
-        kwargs = super(EditFilmView, self).get_form_kwargs()
-        kwargs.update(instance={
-            'film': self.object,
-            'seo': self.object.seo,
-        })
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Редактировать фильм'
-        return context
+    obj = get_object_or_404(model, pk=pk)
+    film = FilmForm(instance=obj)
+    seo = SeoForm(instance=obj.seo)
+    if request.method == 'POST':
+        film = FilmForm(request.POST, request.FILES, instance=obj)
+        seo = SeoForm(request.POST, request.FILES, instance=obj.seo)
+        if film.is_valid() and seo.is_valid():
+            film.save(commit=False)
+            seo.save()
+            film.instance.seo = seo.instance
+            film.save()
+            return redirect('admin_film')
+    context = {
+        'form': film,
+        'seo': seo,
+        'title': 'Редактировать фильм'
+    }
+    return render(request, 'admin_lte/cinema/film_edit.html', context)
 
 
 class DeleteFilmView(DeleteView):
     model = apps.get_model('cinema', 'FilmModel')
     seo_model = apps.get_model('cinema', 'SeoModel')
     success_url = reverse_lazy('admin_film')
-    template_name = 'admin_lte/cinema/delete_film.html'
+    template_name = 'admin_lte/cinema/film_delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['film'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['form'] = self.model.objects.get(pk=self.kwargs['pk'])
         context['title'] = 'Удалить фильм'
         return context
 

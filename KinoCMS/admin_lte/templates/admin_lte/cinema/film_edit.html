@@ -1,0 +1,81 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% load static %}
+{% block content %}
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.title|as_crispy_field }}
+        </div>
+        <div class="col-md-1 offset-md-5">
+            {{ form.is_active|as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.description|as_crispy_field }}
+        </div>
+    </div>
+
+    <!--Poster-->
+    <div class="form-row my-3">
+        <div class="col-md-12"><p style="align-content: center"><b>Главная картинка*:</b></p></div>
+        <div class="col-md-3 offset-md-2">
+            <img id="poster_preview" src="{{ form.instance.poster.url }}" width="200px"
+                 height="125px"
+                 style="max-width: 300px ">
+        </div>
+        <div class="col-sm-2" style="display: flex; align-items: center">
+            <button type="button" onchange="showPreviewPoster(event)"
+                    class="btn-upload btn btn-outline-success btn-file"
+                    style="display: block; min-width: 100px">
+                Загрузить
+                {{ form.poster }}
+            </button>
+        </div>
+        <div class="col-md-2" style="display: flex; align-items: center">
+            <button type="button" id="delete-poster" class="btn-upload btn btn-outline-danger btn-file">Удалить</button>
+        </div>
+    </div>
+    <!--End Poster-->
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.gallery|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.url|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.release_date|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-1">
+            <strong>Типы кино*</strong>
+        </div>
+        <div class="col-md-1">
+            {{ form.is_3d|as_crispy_field }}
+        </div>
+        <div class="col-md-1">
+            {{ form.is_2d|as_crispy_field }}
+        </div>
+        <div class="col-md-1">
+            {{ form.is_imax|as_crispy_field }}
+        </div>
+    </div>
+
+    <hr class="my-5">
+    {% show_form_seo seo %}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+
+{% endblock %}
