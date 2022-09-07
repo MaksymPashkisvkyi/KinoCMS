@@ -8,17 +8,17 @@
     {% csrf_token %}
     <div class="form-row">
         <div class="col-md-6">
-            {{ cinema.title|as_crispy_field }}
+            {{ form.title|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
         <div class="col-md-6">
-            {{ cinema.description|as_crispy_field }}
+            {{ form.description|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
         <div class="col-md-6">
-            {{ cinema.condition|as_crispy_field }}
+            {{ form.condition|as_crispy_field }}
         </div>
     </div>
 
@@ -26,14 +26,14 @@
     <div class="form-row my-3">
         <div class="col-md-12"><p style="align-content: center"><b>Логотип*:</b></p></div>
         <div class="col-md-3 offset-md-2">
-            <img id="logo_preview" src="{{ cinema.instance.logo.url }}" width="200px"
+            <img id="logo_preview" src="{{ form.instance.logo.url }}" width="200px"
                  height="125px"
                  style="max-width: 300px ">
         </div>
         <div class="col-md-2" style="display: flex; align-items: center">
             <button onchange="showPreviewLogo(event)" class="btn-upload btn btn-outline-success btn-file">
                 <span>Загрузить</span>
-                {{ cinema.logo }}
+                {{ form.logo }}
             </button>
         </div>
         <div class="col-md-2" style="display: flex; align-items: center">
@@ -46,7 +46,7 @@
     <div class="form-row my-3">
         <div class="col-md-12"><p style="align-content: center"><b>Фото верхнего баннера*:</b></p></div>
         <div class="col-md-3 offset-md-2">
-            <img id="banner_preview" src="{{ cinema.instance.banner.url }}" width="200px"
+            <img id="banner_preview" src="{{ form.instance.banner.url }}" width="200px"
                  height="125px"
                  style="max-width: 300px ">
         </div>
@@ -54,7 +54,7 @@
             <button type="button" onchange="showPreviewBanner(event)" class="btn-upload btn btn-outline-success btn-file"
                     style="display: block; min-width: 100px">
                 Загрузить
-                {{ cinema.banner }}
+                {{ form.banner }}
             </button>
         </div>
         <div class="col-md-2" style="display: flex; align-items: center">
@@ -65,7 +65,7 @@
 
     <div class="form-row">
         <div class="col-md-6">
-            {{ cinema.gallery|as_crispy_field }}
+            {{ form.gallery|as_crispy_field }}
         </div>
     </div>
 
