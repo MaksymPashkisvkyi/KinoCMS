@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django_cleanup',
     'betterforms',
     'debug_toolbar',
-    'tempus_dominus'
 ]
 
 MIDDLEWARE = [
