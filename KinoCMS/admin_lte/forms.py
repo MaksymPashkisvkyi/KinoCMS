@@ -1,4 +1,3 @@
-from betterforms.multiform import MultiModelForm
 from django import forms
 from django.apps import apps
 
@@ -22,6 +21,7 @@ class SeoForm(forms.ModelForm):
                 'placeholder': 'Ключевые слова'
             }),
             'seo_description': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Описание блока'
             })
@@ -34,32 +34,22 @@ class SeoForm(forms.ModelForm):
         }
 
 
-class GalleryForm(forms.ModelForm):
-    class Meta:
-        model = apps.get_model('cinema', 'GalleryModel')
-        fields = ['title', 'image']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': 'Название изображения'
-            })
-        }
-
-
 class CinemaForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'CinemaModel')
-        fields = ['title', 'description', 'condition', 'logo', 'banner', 'gallery']
+        fields = ['title', 'description', 'condition', 'logo', 'banner']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Название кинотеатра'
             }),
             'description': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Описание кинотеатра'
             }),
             'condition': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Условия кинотеатра'
             }),
@@ -71,8 +61,7 @@ class CinemaForm(forms.ModelForm):
             'description': 'Описание',
             'condition': 'Условия',
             'logo': 'Логотип',
-            'banner': 'Фото верхнего баннера',
-            'gallery': 'Галерея картинок'
+            'banner': 'Фото верхнего баннера'
         }
 
 
@@ -86,6 +75,7 @@ class HallForm(forms.ModelForm):
                 'placeholder': 'Номер зала'
             }),
             'description': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Описание зала'
             })
@@ -173,10 +163,12 @@ class FilmForm(forms.ModelForm):
                 'placeholder': 'Название фильма'
             }),
             'description': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Описание фильма'
             }),
             'url': forms.URLInput(attrs={
+                'class': 'form-control',
                 'placeholder': 'Ссылка на видео в YouTube'
             }),
             'release_date': forms.DateInput(
@@ -199,54 +191,3 @@ class FilmForm(forms.ModelForm):
             'is_2d': '2D',
             'is_imax': 'IMAX'
         }
-
-
-class CinemaMultiForm(MultiModelForm):
-    form_classes = {
-        'cinema': CinemaForm,
-        'seo': SeoForm
-    }
-
-    def save(self, commit=True):
-        objects = super(CinemaMultiForm, self).save(commit=False)
-        if commit:
-            seo = objects['seo']
-            seo.save()
-            cinema = objects['cinema']
-            cinema.seo = seo
-            cinema.save()
-        return objects
-
-
-class HallMultiForm(MultiModelForm):
-    form_classes = {
-        'hall': HallForm,
-        'seo': SeoForm
-    }
-
-    def save(self, commit=True):
-        objects = super(HallMultiForm, self).save(commit=False)
-        if commit:
-            seo = objects['seo']
-            seo.save()
-            hall = objects['hall']
-            hall.seo = seo
-            hall.save()
-        return objects
-
-
-class FilmMultiForm(MultiModelForm):
-    form_classes = {
-        'film': FilmForm,
-        'seo': SeoForm
-    }
-
-    def save(self, commit=True):
-        objects = super(FilmMultiForm, self).save(commit=False)
-        if commit:
-            seo = objects['seo']
-            seo.save()
-            film = objects['film']
-            film.seo = seo
-            film.save()
-        return objects
