@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
-from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset
+from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset, HallForm
 
 
 def admin_statistic(request):
@@ -33,11 +33,12 @@ class AdminCinemaView(ListView):
 
 def add_cinema_view(request):
     gallery_model = apps.get_model('cinema', 'GalleryModel')
+    gallery_query_set = gallery_model.objects.none()
 
     cinema = CinemaForm(request.POST or None, request.FILES or None)
     seo = SeoForm(request.POST or None)
-    formset = PhotoInlineFormset(request.POST, request.FILES)
-    print(cinema)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
     if request.method == 'POST':
         if cinema.is_valid() and seo.is_valid() and formset.is_valid():
             cinema.save(commit=False)
@@ -69,10 +70,12 @@ def add_cinema_view(request):
 def edit_cinema_view(request, pk):
     cinema_model = apps.get_model('cinema', 'CinemaModel')
     gallery_model = apps.get_model('cinema', 'GalleryModel')
+    hall_model = apps.get_model('cinema', 'HallModel')
 
     cinema_object = get_object_or_404(cinema_model, pk=pk)
     gallery_object = get_object_or_404(gallery_model, pk=cinema_object.gallery.pk)
     gallery_query_set = gallery_object.imagemodel_set.all()
+    halls = hall_model.objects.filter(cinema=cinema_object)
 
     cinema = CinemaForm(instance=cinema_object)
     seo = SeoForm(instance=cinema_object.seo)
@@ -97,6 +100,10 @@ def edit_cinema_view(request, pk):
         'form': cinema,
         'seo': seo,
         'formset': formset,
+        'halls': halls,
+        'pk': pk,
+        'admin_edit_hall': 'admin_edit_hall',
+        'admin_delete_hall': 'admin_delete_hall',
         'title': 'Редактировать кинотеатр'
     }
     return render(request, 'admin_lte/cinema/cinema_edit.html', context)
@@ -130,64 +137,101 @@ class DeleteCinemaView(DeleteView):
 
 # ____________________Hall____________________ #
 
-class AddHallView(CreateView):
-    # form_class = HallMultiForm
-    # template_name = 'admin_lte/cinema/add_edit_hall.html'
-    # success_url = reverse_lazy('admin_add_cinema')
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data()
-    #     context['title'] = 'Добавить зал'
-    #     return context
-    #
-    # def form_valid(self, form):
-    #     seo = form['seo'].save()
-    #     hall = form['hall'].save(commit=False)
-    #     hall.seo = seo
-    #     hall.save()
-    #     return redirect('admin_add_cinema')
-    pass
+def add_hall_view(request, pk):
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+    cinema_model = apps.get_model('cinema', 'CinemaModel')
+    gallery_query_set = gallery_model.objects.none()
+
+    hall = HallForm(request.POST or None, request.FILES or None)
+    seo = SeoForm(request.POST or None)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+    if request.method == 'POST':
+        if hall.is_valid() and seo.is_valid() and formset.is_valid():
+            hall.save(commit=False)
+            cinema = cinema_model.objects.get(pk=pk)
+            gallery = gallery_model.objects.create(title=hall.cleaned_data['title'])
+            gallery.save()
+            for form in formset:
+                if form.instance.image:
+                    form.save(commit=False)
+                    form.instance.gallery = gallery
+                    form.save()
+            hall.instance.gallery = gallery
+            seo.save()
+            hall.instance.seo = seo.instance
+            hall.instance.cinema = cinema
+            hall.save()
+            return redirect('admin_edit_cinema', pk=pk)
+    else:
+        hall = HallForm()
+        seo = SeoForm()
+        formset = PhotoInlineFormset()
+    context = {
+        'form': hall,
+        'seo': seo,
+        'formset': formset,
+        'cinema_id': pk,
+        'title': 'Добавить зал'
+    }
+    return render(request, 'admin_lte/cinema/hall_add.html', context=context)
 
 
-class EditHallView(UpdateView):
-    # form_class = HallMultiForm
-    # model = apps.get_model('cinema', 'HallModel')
-    # template_name = 'admin_lte/cinema/add_edit_hall.html'
-    # success_url = reverse_lazy('admin_add_cinema')
-    #
-    # def get_form_kwargs(self):
-    #     kwargs = super(EditHallView, self).get_form_kwargs()
-    #     kwargs.update(instance={
-    #         'hall': self.object,
-    #         'seo': self.object.seo,
-    #     })
-    #     return kwargs
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data()
-    #     context['title'] = 'Редактировать зал'
-    #     return context
-    pass
+def edit_hall_view(request, pk):
+    hall_model = apps.get_model('cinema', 'HallModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
+    hall_object = get_object_or_404(hall_model, pk=pk)
+    gallery_object = get_object_or_404(gallery_model, pk=hall_object.gallery.pk)
+    gallery_query_set = gallery_object.imagemodel_set.all()
+
+    hall = HallForm(instance=hall_object)
+    seo = SeoForm(instance=hall_object.seo)
+    formset = PhotoInlineFormset(queryset=gallery_query_set)
+
+    if request.method == 'POST':
+        hall = HallForm(request.POST or None, request.FILES or None, instance=hall_object)
+        seo = SeoForm(request.POST or None, instance=hall_object.seo)
+        formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+        if hall.is_valid() and seo.is_valid() and formset.is_valid():
+            formset.save(commit=False)
+            for i in formset.new_objects:
+                i.gallery = gallery_object
+                i.save()
+            for i in formset.changed_objects:
+                i[0].save()
+            seo.save()
+            hall.instance.seo = seo.instance
+            hall.save()
+            return redirect('admin_edit_cinema', pk=hall.instance.cinema.pk)
+    context = {
+        'form': hall,
+        'seo': seo,
+        'formset': formset,
+        'cinema_id': hall.instance.cinema.pk,
+        'title': 'Редактировать зал'
+    }
+    return render(request, 'admin_lte/cinema/hall_edit.html', context)
 
 
 class DeleteHallView(DeleteView):
     model = apps.get_model('cinema', 'HallModel')
     seo_model = apps.get_model('cinema', 'SeoModel')
-    success_url = reverse_lazy('admin_add_cinema')
-    template_name = 'admin_lte/cinema/delete_hall.html'
+    template_name = 'admin_lte/cinema/hall_delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['hall'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['form'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['cinema_id'] = self.object.cinema_id
         context['title'] = 'Удалить зал'
         return context
 
     def form_valid(self, form):
+        cinema_id = self.object.cinema_id
         seo = self.seo_model.objects.get(pk=self.object.seo.pk)
         self.object.delete()
         seo.delete()
-        return HttpResponseRedirect(self.get_success_url())
-
+        return HttpResponseRedirect(reverse_lazy('admin_edit_cinema', kwargs={'pk': cinema_id}))
 
 # ____________________Hall____________________ #
 

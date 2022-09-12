@@ -3,7 +3,8 @@
 {% load admin_lte_tags %}
 {% load static %}
 {% block content %}
-<form method="POST" enctype="multipart/form-data">
+
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-row">
         <div class="col-md-6">
@@ -15,38 +16,14 @@
             {{ form.description|as_crispy_field }}
         </div>
     </div>
+    <!--Hall scheme-->
     <div class="form-row">
         <div class="col-md-6">
-            {{ form.condition|as_crispy_field }}
+            {{ form.hall_scheme|as_crispy_field }}
         </div>
     </div>
-    <!--Logo-->
-    <div class="form-row my-3">
-        <div class="col-md-12 mb-3"><span class="font-weight-bold">{{ form.logo.label }}*:</span></div>
-        <div class="col-md-3 offset-md-2">
-            <img id="logo_preview"
-                 class="form-img-preview"
-                 src="{{ form.instance.logo.url }}">
-        </div>
-        <div class="row btn-group-img-control">
-            <div class="col-md-1">
-                <button type="button"
-                        onchange="showPreviewLogo(event)"
-                        class="btn btn-upload btn-outline-success btn-file btn-img-control">
-                    <span>Загрузить</span>
-                    {{ form.logo }}
-                </button>
-            </div>
-            <div class="col-md-1">
-                <button type="button"
-                        id="delete-logo"
-                        class="btn btn-upload btn-outline-danger btn-file btn-img-control">
-                    <span>Удалить</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!--End Logo-->
+    <!--End Hall scheme-->
+
     <!--Banner-->
     <div class="form-row my-3">
         <div class="col-md-12 mb-3"><span class="font-weight-bold">{{ form.banner.label }}*:</span></div>
@@ -74,6 +51,7 @@
         </div>
     </div>
     <!--End Banner-->
+    <!--GALLERY-->
     <hr class="my-5">
     <div id="gallery" class="form-gallery">
         <div class="col-md-12 mb-3"><span class="font-weight-bold">Галерея:</span></div>
@@ -134,68 +112,16 @@
         </div>
     </div>
     <hr class="my-5">
-    <!--    {% show_halls_table halls %-->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Список залов</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="d-flex flex-row-reverse mb-3">
-                                <button type="button" class="btn btn-info add-new">
-                                    <a class="text-decoration-none text-reset" href="{% url 'admin_add_hall' pk %}">
-                                        <i class="fa fa-plus"></i> Добавить
-                                    </a>
-                                </button>
-                            </div>
-                            <table id="admin_table" class="table table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="33%">Название зала</th>
-                                    <th width="66%">Дата создания</th>
-                                    {% if halls %}
-                                    <th width="40"></th>
-                                    {% endif %}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for hall in halls %}
-                                <tr>
-                                    <td>{{ hall.title }}</td>
-                                    <td>{{ hall.time_create }}</td>
-                                    {% if halls %}
-                                    <td>
-                                        {% table_buttons 'admin_edit_hall' 'admin_delete_hall' hall.pk %}
-                                    </td>
-                                    {% endif %}
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <hr class="my-5">
     {% show_form_seo seo %}
     <hr class="my-5">
     <div class="d-flex">
-        <a href="{% url 'admin_cinema' %}">
+        <a href="{% url 'admin_edit_cinema' cinema_id %}">
             <button type="button" class="btn btn-secondary">Отменить</button>
         </a>
         <button type="submit" class="btn btn-primary mx-3">Сохранить</button>
         <button type="reset" class="btn btn-primary ml-auto">Очистить</button>
     </div>
 </form>
+
+
 {% endblock %}

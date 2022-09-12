@@ -82,7 +82,7 @@ class CinemaForm(forms.ModelForm):
 class HallForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'HallModel')
-        fields = ['title', 'description', 'hall_scheme', 'banner', 'gallery']
+        fields = ['title', 'description', 'hall_scheme', 'banner']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-input',
@@ -92,14 +92,15 @@ class HallForm(forms.ModelForm):
                 'class': 'form-control',
                 'rows': 5,
                 'placeholder': 'Описание зала'
-            })
+            }),
+            'hall_scheme': forms.FileInput(),
+            'banner': forms.FileInput(),
         }
         labels = {
             'title': 'Номер зала',
             'description': 'Описание зала',
             'hall_scheme': 'Схема зала',
             'banner': 'Верхний баннер',
-            'gallery': 'Галерея картинок'
         }
 
 

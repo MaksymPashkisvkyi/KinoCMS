@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import (AddHallView, AddUserView,
+from .views import (AddUserView,
                     AdminBannerView, AdminCinemaView, AdminFilmView,
                     AdminUserView, DeleteCinemaView, DeleteFilmView,
                     DeleteHallView, DeleteUserView,
-                    EditHallView, EditUserView, admin_statistic, add_cinema_view, add_film_view,
-                    edit_cinema_view, edit_film_view)
+                    EditUserView, admin_statistic, add_cinema_view, add_film_view, add_hall_view,
+                    edit_cinema_view, edit_film_view, edit_hall_view)
 
 urlpatterns = [
     path('', admin_statistic, name='admin_statistic'),
@@ -22,8 +22,8 @@ urlpatterns = [
     path('edit_user/<int:pk>/', EditUserView.as_view(), name='admin_edit_user'),
     path('delete_user/<int:pk>/', DeleteUserView.as_view(), name='admin_delete_user'),
 
-    path('add_hall/', AddHallView.as_view(), name='admin_add_hall'),
-    path('edit_hall/<int:pk>/', EditHallView.as_view(), name='admin_edit_hall'),
+    path('add_hall/<int:pk>/', add_hall_view, name='admin_add_hall'),
+    path('edit_hall/<int:pk>/', edit_hall_view, name='admin_edit_hall'),
     path('delete_hall/<int:pk>/', DeleteHallView.as_view(), name='admin_delete_hall'),
 
     path('films/', AdminFilmView.as_view(), name='admin_film'),
