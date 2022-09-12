@@ -3,7 +3,7 @@ function showPreviewLogo() {
 }
 
 $('#delete-logo').click(function () {
-    $('#logo').val("");
+    $('#id_logo').val("");
     $('#logo_preview').attr("src", "/static/cinema/dist/img/preview_upload.png")
 })
 
@@ -12,7 +12,7 @@ function showPreviewBanner() {
 }
 
 $('#delete-banner').click(function () {
-    $('#banner').val("");
+    $('#id_banner').val("");
     $('#banner_preview').attr("src", "/static/cinema/dist/img/preview_upload.png")
 })
 
@@ -21,6 +21,6 @@ function showPreviewPoster() {
 }
 
 $('#delete-poster').click(function () {
-    $('#poster').val("");
+    $('#id_poster').val("");
     $('#poster_preview').attr("src", "/static/cinema/dist/img/preview_upload.png")
 })

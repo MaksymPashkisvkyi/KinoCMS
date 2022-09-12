@@ -1,0 +1,44 @@
+.form-img-preview {
+    width: 200px;
+    height: 125px;
+    max-width: 300px;
+}
+
+.btn-img-control {
+    display: block;
+    min-width: 110px
+}
+
+.btn-group-img-control {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.form-gallery {
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+.form-gallery-img {
+    height: 110px;
+    width: 200px;
+}
+
+.btn-gallery-load {
+    margin: 15px 50px 15px 50px;
+    min-width: 125px;
+}
+
+.btn-gallery-add {
+    width: 100px;
+    min-width: 120px;
+    display: block;
+}
+
+.btn-form-delete {
+    display: inline;
+    position: relative;
+    right: 12px;
+    bottom: 12px;
+}

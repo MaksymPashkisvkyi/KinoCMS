@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
-from .forms import HallMultiForm, UserForm, CinemaForm, SeoForm, FilmForm
+from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset
 
 
 def admin_statistic(request):
@@ -32,35 +32,63 @@ class AdminCinemaView(ListView):
 
 
 def add_cinema_view(request):
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
     cinema = CinemaForm(request.POST or None, request.FILES or None)
     seo = SeoForm(request.POST or None)
-
+    formset = PhotoInlineFormset(request.POST, request.FILES)
+    print(cinema)
     if request.method == 'POST':
-        if cinema.is_valid() and seo.is_valid():
+        if cinema.is_valid() and seo.is_valid() and formset.is_valid():
             cinema.save(commit=False)
+            gallery = gallery_model.objects.create(title=cinema.cleaned_data['title'])
+            gallery.save()
+            for form in formset:
+                if form.instance.image:
+                    form.save(commit=False)
+                    form.instance.gallery = gallery
+                    form.save()
+            cinema.instance.gallery = gallery
             seo.save()
             cinema.instance.seo = seo.instance
             cinema.save()
             return redirect('admin_cinema')
-
+    else:
+        cinema = CinemaForm()
+        seo = SeoForm()
+        formset = PhotoInlineFormset()
     context = {
         'form': cinema,
         'seo': seo,
+        'formset': formset,
         'title': 'Добавить кинотеатр'
     }
     return render(request, 'admin_lte/cinema/cinema_add.html', context=context)
 
 
 def edit_cinema_view(request, pk):
-    model = apps.get_model('cinema', 'CinemaModel')
-    obj = get_object_or_404(model, pk=pk)
-    cinema = CinemaForm(instance=obj)
-    seo = SeoForm(instance=obj.seo)
+    cinema_model = apps.get_model('cinema', 'CinemaModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
+    cinema_object = get_object_or_404(cinema_model, pk=pk)
+    gallery_object = get_object_or_404(gallery_model, pk=cinema_object.gallery.pk)
+    gallery_query_set = gallery_object.imagemodel_set.all()
+
+    cinema = CinemaForm(instance=cinema_object)
+    seo = SeoForm(instance=cinema_object.seo)
+    formset = PhotoInlineFormset(queryset=gallery_query_set)
+
     if request.method == 'POST':
-        cinema = CinemaForm(request.POST, request.FILES, instance=obj)
-        seo = SeoForm(request.POST, request.FILES, instance=obj.seo)
-        if cinema.is_valid() and seo.is_valid():
-            cinema.save(commit=False)
+        cinema = CinemaForm(request.POST or None, request.FILES or None, instance=cinema_object)
+        seo = SeoForm(request.POST or None, instance=cinema_object.seo)
+        formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+        if cinema.is_valid() and seo.is_valid() and formset.is_valid():
+            formset.save(commit=False)
+            for i in formset.new_objects:
+                i.gallery = gallery_object
+                i.save()
+            for i in formset.changed_objects:
+                i[0].save()
             seo.save()
             cinema.instance.seo = seo.instance
             cinema.save()
@@ -68,6 +96,7 @@ def edit_cinema_view(request, pk):
     context = {
         'form': cinema,
         'seo': seo,
+        'formset': formset,
         'title': 'Редактировать кинотеатр'
     }
     return render(request, 'admin_lte/cinema/cinema_edit.html', context)
@@ -76,6 +105,8 @@ def edit_cinema_view(request, pk):
 class DeleteCinemaView(DeleteView):
     model = apps.get_model('cinema', 'CinemaModel')
     seo_model = apps.get_model('cinema', 'SeoModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
     success_url = reverse_lazy('admin_cinema')
     template_name = 'admin_lte/cinema/cinema_delete.html'
 
@@ -87,8 +118,10 @@ class DeleteCinemaView(DeleteView):
 
     def form_valid(self, form):
         seo = self.seo_model.objects.get(pk=self.object.seo.pk)
+        gallery = self.gallery_model.objects.get(pk=self.object.gallery.pk)
         self.object.delete()
         seo.delete()
+        gallery.delete()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -98,41 +131,43 @@ class DeleteCinemaView(DeleteView):
 # ____________________Hall____________________ #
 
 class AddHallView(CreateView):
-    form_class = HallMultiForm
-    template_name = 'admin_lte/cinema/add_edit_hall.html'
-    success_url = reverse_lazy('admin_add_cinema')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Добавить зал'
-        return context
-
-    def form_valid(self, form):
-        seo = form['seo'].save()
-        hall = form['hall'].save(commit=False)
-        hall.seo = seo
-        hall.save()
-        return redirect('admin_add_cinema')
+    # form_class = HallMultiForm
+    # template_name = 'admin_lte/cinema/add_edit_hall.html'
+    # success_url = reverse_lazy('admin_add_cinema')
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data()
+    #     context['title'] = 'Добавить зал'
+    #     return context
+    #
+    # def form_valid(self, form):
+    #     seo = form['seo'].save()
+    #     hall = form['hall'].save(commit=False)
+    #     hall.seo = seo
+    #     hall.save()
+    #     return redirect('admin_add_cinema')
+    pass
 
 
 class EditHallView(UpdateView):
-    form_class = HallMultiForm
-    model = apps.get_model('cinema', 'HallModel')
-    template_name = 'admin_lte/cinema/add_edit_hall.html'
-    success_url = reverse_lazy('admin_add_cinema')
-
-    def get_form_kwargs(self):
-        kwargs = super(EditHallView, self).get_form_kwargs()
-        kwargs.update(instance={
-            'hall': self.object,
-            'seo': self.object.seo,
-        })
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Редактировать зал'
-        return context
+    # form_class = HallMultiForm
+    # model = apps.get_model('cinema', 'HallModel')
+    # template_name = 'admin_lte/cinema/add_edit_hall.html'
+    # success_url = reverse_lazy('admin_add_cinema')
+    #
+    # def get_form_kwargs(self):
+    #     kwargs = super(EditHallView, self).get_form_kwargs()
+    #     kwargs.update(instance={
+    #         'hall': self.object,
+    #         'seo': self.object.seo,
+    #     })
+    #     return kwargs
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data()
+    #     context['title'] = 'Редактировать зал'
+    #     return context
+    pass
 
 
 class DeleteHallView(DeleteView):
