@@ -1,5 +1,6 @@
 from django import forms
 from django.apps import apps
+from django.forms import modelformset_factory, HiddenInput
 
 from .utils import CITIES, GENDERS, LANGS
 
@@ -32,6 +33,19 @@ class SeoForm(forms.ModelForm):
             'seo_keywords': 'Ключевые слова',
             'seo_description': 'Описание',
         }
+
+
+class ImageForm(forms.ModelForm):
+    image = forms.ImageField(required=False, widget=forms.FileInput, label='')
+
+    class Meta:
+        model = apps.get_model('cinema', 'ImageModel')
+        fields = ['image']
+
+
+PhotoInlineFormset = modelformset_factory(model=apps.get_model('cinema', 'ImageModel'), form=ImageForm,
+                                          fields=('image',), extra=0, can_delete=True)
+PhotoInlineFormset.deletion_widget = HiddenInput
 
 
 class CinemaForm(forms.ModelForm):
