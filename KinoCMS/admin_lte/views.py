@@ -90,8 +90,7 @@ def edit_cinema_view(request, pk):
             for i in formset.new_objects:
                 i.gallery = gallery_object
                 i.save()
-            for i in formset.changed_objects:
-                i[0].save()
+            formset.save()
             seo.save()
             cinema.instance.seo = seo.instance
             cinema.save()
@@ -198,8 +197,7 @@ def edit_hall_view(request, pk):
             for i in formset.new_objects:
                 i.gallery = gallery_object
                 i.save()
-            for i in formset.changed_objects:
-                i[0].save()
+            formset.save()
             seo.save()
             hall.instance.seo = seo.instance
             hall.save()
@@ -233,6 +231,7 @@ class DeleteHallView(DeleteView):
         seo.delete()
         return HttpResponseRedirect(reverse_lazy('admin_edit_cinema', kwargs={'pk': cinema_id}))
 
+
 # ____________________Hall____________________ #
 
 
@@ -251,36 +250,63 @@ class AdminFilmView(ListView):
 
 
 def add_film_view(request):
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+    gallery_query_set = gallery_model.objects.none()
+
     film = FilmForm(request.POST or None, request.FILES or None)
     seo = SeoForm(request.POST or None)
-
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
     if request.method == 'POST':
-        if film.is_valid() and seo.is_valid():
-            print(film.cleaned_data)
+        if film.is_valid() and seo.is_valid() and formset.is_valid():
             film.save(commit=False)
+            gallery = gallery_model.objects.create(title=film.cleaned_data['title'])
+            gallery.save()
+            for form in formset:
+                if form.instance.image:
+                    form.save(commit=False)
+                    form.instance.gallery = gallery
+                    form.save()
+            film.instance.gallery = gallery
             seo.save()
             film.instance.seo = seo.instance
             film.save()
             return redirect('admin_film')
-
+    else:
+        film = FilmForm()
+        seo = SeoForm()
+        formset = PhotoInlineFormset()
     context = {
         'form': film,
         'seo': seo,
+        'formset': formset,
         'title': 'Добавить фильм'
     }
     return render(request, 'admin_lte/cinema/film_add.html', context=context)
 
 
 def edit_film_view(request, pk):
-    model = apps.get_model('cinema', 'FilmModel')
-    obj = get_object_or_404(model, pk=pk)
-    film = FilmForm(instance=obj)
-    seo = SeoForm(instance=obj.seo)
+    film_model = apps.get_model('cinema', 'FilmModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
+    film_object = get_object_or_404(film_model, pk=pk)
+    gallery_object = get_object_or_404(gallery_model, pk=film_object.gallery.pk)
+    gallery_query_set = gallery_object.imagemodel_set.all()
+
+    film = FilmForm(instance=film_object)
+    seo = SeoForm(instance=film_object.seo)
+    formset = PhotoInlineFormset(queryset=gallery_query_set)
+
     if request.method == 'POST':
-        film = FilmForm(request.POST, request.FILES, instance=obj)
-        seo = SeoForm(request.POST, request.FILES, instance=obj.seo)
-        if film.is_valid() and seo.is_valid():
-            film.save(commit=False)
+        film = FilmForm(request.POST or None, request.FILES or None, instance=film_object)
+        seo = SeoForm(request.POST or None, instance=film_object.seo)
+        formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+        if film.is_valid() and seo.is_valid() and formset.is_valid():
+            formset.save(commit=False)
+            for i in formset.new_objects:
+                i.gallery = gallery_object
+                i.save()
+            formset.save()
             seo.save()
             film.instance.seo = seo.instance
             film.save()
@@ -288,6 +314,7 @@ def edit_film_view(request, pk):
     context = {
         'form': film,
         'seo': seo,
+        'formset': formset,
         'title': 'Редактировать фильм'
     }
     return render(request, 'admin_lte/cinema/film_edit.html', context)

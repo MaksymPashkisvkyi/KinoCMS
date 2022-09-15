@@ -3,10 +3,7 @@
 {% load admin_lte_tags %}
 {% load static %}
 {% block content %}
-
-
 <form enctype="multipart/form-data" method="post">
-
     {% csrf_token %}
     <div class="form-row">
         <div class="col-md-6">
@@ -16,40 +13,77 @@
             {{ form.is_active|as_crispy_field }}
         </div>
     </div>
-
     <div class="form-row">
         <div class="col-md-6">
             {{ form.description|as_crispy_field }}
         </div>
     </div>
-
     <!--Poster-->
     <div class="form-row my-3">
-        <div class="col-md-12"><p style="align-content: center"><b>Главная картинка*:</b></p></div>
-        <div class="col-md-3 offset-md-2">
-            <img id="poster_preview" src="{% static 'cinema/dist/img/preview_upload.png' %}" width="200px"
-                 height="125px"
-                 style="max-width: 300px ">
+        <div class="col-md-12 mb-3"><span class="font-weight-bold">{{ form.poster.label }}*:</span></div>
+        <div class="col-md-3 col-6 offset-md-2 mr-5">
+            <img id="poster_preview"
+                 class="img-fluid form-img-preview"
+                 src="{% static 'cinema/dist/img/preview_upload.png' %}">
         </div>
-        <div class="col-sm-2" style="display: flex; align-items: center">
-            <button type="button" onchange="showPreviewPoster(event)"
-                    class="btn-upload btn btn-outline-success btn-file"
-                    style="display: block; min-width: 100px">
-                Загрузить
-                {{ form.poster }}
-            </button>
-        </div>
-        <div class="col-md-2" style="display: flex; align-items: center">
-            <button type="button" id="delete-poster" class="btn-upload btn btn-outline-danger btn-file">Удалить</button>
+        <div class="row btn-group-img-control">
+            <div class="col-md-1">
+                <button type="button"
+                        onchange="showPreviewPoster(event)"
+                        class="btn btn-upload btn-outline-success btn-file btn-img-control">
+                    <span>Загрузить</span>
+                    {{ form.poster }}
+                </button>
+            </div>
+            <div class="col-md-1">
+                <button type="button"
+                        id="delete-poster"
+                        class="btn btn-upload btn-outline-danger btn-file btn-img-control">
+                    <span>Удалить</span>
+                </button>
+            </div>
         </div>
     </div>
     <!--End Poster-->
-    <div class="form-row">
-        <div class="col-md-6">
-            {{ form.gallery|as_crispy_field }}
+    <!--GALLERY-->
+    <div id="gallery" class="form-gallery">
+        <div class="col-md-12 mb-3"><span class="font-weight-bold">Галерея:</span></div>
+        <div id="form_set" class="mb-5">
+            {{ formset.management_form }}
+            {% for form in formset %}
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+            {% endfor %}
+            {% endfor %}
+        </div>
+        <div class="delete-list d-none"></div>
+        <div id="empty_form" class="d-none">
+            <div id="form-__prefix__-form" style="display: inline-block">
+                <a id="form-__prefix__" onclick="delete_image(this.id)">
+                    <button type="button" class="close btn-form-delete" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </a>
+                <input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id">
+                <div class="text-center">
+                    <img id="form-__prefix__-image"
+                         class="form-gallery-img"
+                         src="{% static 'cinema/dist/img/preview_upload.png' %}">
+                </div>
+                <div class="text-center">
+                    <a id="form-__prefix__"
+                       onchange="preview_gallery(this.id)"
+                       class="btn btn-outline-success btn-file btn-gallery-load"><span>Загрузить</span>
+                        <input type="file" name="form-__prefix__-image" accept="image/*" id="id_form-__prefix__-image">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-block btn-success ml-5 btn-gallery-add" id="add_img">Добавить</button>
         </div>
     </div>
-
+    <hr class="my-5">
     <div class="form-row">
         <div class="col-md-6">
             {{ form.url|as_crispy_field }}
@@ -74,11 +108,15 @@
             {{ form.is_imax|as_crispy_field }}
         </div>
     </div>
-
     <hr class="my-5">
     {% show_form_seo seo %}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <hr class="my-5">
+    <div class="d-flex">
+        <a href="{% url 'admin_film' %}">
+            <button type="button" class="btn btn-secondary">Отменить</button>
+        </a>
+        <button type="submit" class="btn btn-primary mx-3">Сохранить</button>
+        <button type="reset" class="btn btn-primary ml-auto">Очистить</button>
+    </div>
 </form>
-
-
 {% endblock %}

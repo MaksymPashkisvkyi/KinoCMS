@@ -170,7 +170,7 @@ class UserForm(forms.ModelForm):
 class FilmForm(forms.ModelForm):
     class Meta:
         model = apps.get_model('cinema', 'FilmModel')
-        fields = ['title', 'description', 'poster', 'gallery', 'url', 'release_date', 'is_active', 'is_3d', 'is_2d',
+        fields = ['title', 'description', 'poster', 'url', 'release_date', 'is_active', 'is_3d', 'is_2d',
                   'is_imax']
         widgets = {
             'title': forms.TextInput(attrs={
@@ -198,7 +198,6 @@ class FilmForm(forms.ModelForm):
             'title': 'Название фильма',
             'description': 'Описание',
             'poster': 'Главная картинка',
-            'gallery': 'Галерея картинок',
             'url': 'Ссылка на трейлер',
             'release_date': 'Начало показов',
             'is_active': 'Активно',

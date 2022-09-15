@@ -3,12 +3,15 @@
 
 <form method="post">
     {% csrf_token %}
-    <p>
-        {{ form.title }}
-    </p>
-    <button onclick="return confirm('Вы хотите удалить {{ form.title }}?');" type="submit" class="btn btn-danger">
-        Удалить
-    </button>
+    <p>Вы хотите удалить {{ form.title }}?</p>
+    <div class="d-flex">
+        <a href="{% url 'admin_film' %}">
+            <button type="button" class="btn btn-secondary mr-3">Отменить</button>
+        </a>
+        <button onclick="return confirm('Вы хотите удалить {{ form.title }}?');" type="submit" class="btn btn-danger">
+            Удалить
+        </button>
+    </div>
 </form>
 
 {% endblock %}
