@@ -1,16 +1,16 @@
 from django.urls import path
 
 from .views import (AddUserView,
-                    AdminBannerView, AdminCinemaView, AdminFilmView,
+                    AdminCinemaView, AdminFilmView,
                     AdminUserView, DeleteCinemaView, DeleteFilmView,
                     DeleteHallView, DeleteUserView,
                     EditUserView, admin_statistic, add_cinema_view, add_film_view, add_hall_view,
-                    edit_cinema_view, edit_film_view, edit_hall_view)
+                    edit_cinema_view, edit_film_view, edit_hall_view, banners_view)
 
 urlpatterns = [
     path('', admin_statistic, name='admin_statistic'),
 
-    path('banners/', AdminBannerView.as_view(), name='admin_banner'),
+    path('banners/', banners_view, name='admin_banner'),
 
     path('cinemas/', AdminCinemaView.as_view(), name='admin_cinema'),
     path('add_cinema/', add_cinema_view, name='admin_add_cinema'),

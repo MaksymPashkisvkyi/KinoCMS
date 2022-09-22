@@ -28,16 +28,18 @@
         </div>
         <div class="row btn-group-img-control">
             <div class="col-md-1">
-                <button type="button"
-                        onchange="showPreviewPoster(event)"
+                <button name="poster"
+                        type="button"
+                        onchange="showPreview(name, event)"
                         class="btn-upload btn btn-outline-success btn-file btn-img-control">
                     <span>Загрузить</span>
                     {{ form.poster }}
                 </button>
             </div>
             <div class="col-md-1">
-                <button type="button"
-                        id="delete-poster"
+                <button name="poster"
+                        type="button"
+                        onclick="deletePreview(name, event)"
                         class="btn btn-upload btn-outline-danger btn-file btn-img-control">
                     <span>Удалить</span>
                 </button>

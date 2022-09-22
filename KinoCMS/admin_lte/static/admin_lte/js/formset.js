@@ -4,6 +4,18 @@ $('#add_img').click(function() {
 	$('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
 });
 
+$('#add_news_img').click(function() {
+	var form_idx = $('#id_news-TOTAL_FORMS').val();
+	$('#news-formset').append($('#news-empty_form').html().replace(/__prefix__/g, form_idx));
+	$('#id_news-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+});
+
+$('#add_main_img').click(function() {
+	var form_idx = $('#id_main-TOTAL_FORMS').val();
+	$('#main-formset').append($('#main-empty_form').html().replace(/__prefix__/g, form_idx));
+	$('#id_main-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+});
+
 function delete_image(index) {
     if (confirm("Вы действительно хотите удалить картинку?")) {
         $('#' + index + '-form').append('<input type="hidden" value="on" name="' + index  + '-DELETE" id="id_' + index + '-DELETE">');

@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
-from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset, HallForm
+from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset, HallForm, BackgroundBannerForm, \
+    BannerForm, MainBannerFormset, NewsBannerFormset
 
 
 def admin_statistic(request):
@@ -401,21 +402,90 @@ class DeleteUserView(DeleteView):
 
 # ____________________User____________________ #
 
+# ____________________Banners____________________ #
 
-class AdminBannerView(TemplateView):
-    template_name = 'admin_lte/banner/banners.html'
 
-    def get_context_data(self, **kwargs):
-        model = {
-            'BackgroundBannerModel': apps.get_model('banners', 'BackgroundBannerModel'),
-            'MainPageBannerModel': apps.get_model('banners', 'MainPageBannerModel'),
-            'NewsPromoBannerModel': apps.get_model('banners', 'NewsPromoBannerModel')
-        }
+def banners_view(request):
+    bg_banner_model = apps.get_model('cinema', 'BackgroundBannerModel')
+    banner_model = apps.get_model('cinema', 'BannerModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
 
-        context = super().get_context_data()
-        context['title'] = 'Баннера/Слайдеры'
-        context['background_banners'] = model['BackgroundBannerModel'].objects.all()
-        context['main_page_banners'] = model['MainPageBannerModel'].objects.all()
-        context['new_promo_banners'] = model['NewsPromoBannerModel'].objects.all()
+    bg_banner_obj, _ = bg_banner_model.objects.get_or_create()
+    main_banner_obj, _ = banner_model.objects.get_or_create(name='main')
+    news_banner_obj, _ = banner_model.objects.get_or_create(name='news')
 
-        return context
+    main_gallery_obj, is_main_gallery_created = gallery_model.objects.get_or_create(title='main_banner_formset')
+    news_gallery_obj, is_news_gallery_created = gallery_model.objects.get_or_create(title='news_banner_formset')
+
+    if main_banner_obj.gallery:
+        main_gallery_queryset = main_gallery_obj.imagemodel_set.all()
+    else:
+        main_gallery_queryset = gallery_model.objects.none()
+
+    if news_banner_obj.gallery:
+        news_gallery_queryset = news_gallery_obj.imagemodel_set.all()
+    else:
+        news_gallery_queryset = gallery_model.objects.none()
+
+    bg_banner_form = BackgroundBannerForm(request.POST or None, request.FILES or None, instance=bg_banner_obj)
+    main_banner_form = BannerForm(request.POST or None, request.FILES or None, instance=main_banner_obj, prefix='main')
+    news_banner_form = BannerForm(request.POST or None, request.FILES or None, instance=news_banner_obj, prefix='news')
+
+    main_banner_formset = MainBannerFormset(request.POST or None, request.FILES or None, queryset=main_gallery_queryset,
+                                            prefix='main')
+    news_banner_formset = NewsBannerFormset(request.POST or None, request.FILES or None, queryset=news_gallery_queryset,
+                                            prefix='news')
+    if request.method == 'POST':
+        if 'bg_banner_form' in request.POST:
+            if bg_banner_form.is_valid():
+                bg_banner_form.save()
+                return redirect('admin_banner')
+
+        if 'main_banner_form' in request.POST:
+            if main_banner_form.is_valid() and main_banner_formset.is_valid():
+                if is_main_gallery_created:
+                    main_gallery_obj.save()
+                    for form in main_banner_formset:
+                        if form.instance.image:
+                            form.save(commit=False)
+                            form.instance.gallery = main_gallery_obj
+                            form.save()
+                    main_banner_form.instance.gallery = main_gallery_obj
+                else:
+                    main_banner_formset.save(commit=False)
+                    for i in main_banner_formset.new_objects:
+                        i.gallery = main_gallery_obj
+                        i.save()
+                    main_banner_formset.save()
+                main_banner_form.save()
+                return redirect('admin_banner')
+
+        if 'news_banner_form' in request.POST:
+            if news_banner_form.is_valid() and news_banner_formset.is_valid():
+                if is_news_gallery_created:
+                    news_gallery_obj.save()
+                    for form in news_banner_formset:
+                        if form.instance.image:
+                            form.save(commit=False)
+                            form.instance.gallery = news_gallery_obj
+                            form.save()
+                    news_banner_form.instance.gallery = news_gallery_obj
+                else:
+                    news_banner_formset.save(commit=False)
+                    for i in news_banner_formset.new_objects:
+                        i.gallery = news_gallery_obj
+                        i.save()
+                    news_banner_formset.save()
+                news_banner_form.save()
+                return redirect('admin_banner')
+
+    context = {
+        'bg_banner_form': bg_banner_form,
+        'main_banner_form': main_banner_form,
+        'news_banner_form': news_banner_form,
+        'main_banner_formset': main_banner_formset,
+        'news_banner_formset': news_banner_formset
+    }
+    return render(request, 'admin_lte/cinema/banners.html', context)
+
+# ____________________Banners____________________ #

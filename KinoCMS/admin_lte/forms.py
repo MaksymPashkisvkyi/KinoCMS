@@ -40,7 +40,15 @@ class ImageForm(forms.ModelForm):
 
     class Meta:
         model = apps.get_model('cinema', 'ImageModel')
-        fields = ['image']
+        fields = ['image', 'text', 'url']
+        widgets = {
+            'url': forms.URLInput(attrs={
+                'class': 'form-control'
+            }),
+            'text': forms.TextInput(attrs={
+                'class': 'form-control'
+            })
+        }
 
 
 PhotoInlineFormset = modelformset_factory(model=apps.get_model('cinema', 'ImageModel'), form=ImageForm,
@@ -205,3 +213,52 @@ class FilmForm(forms.ModelForm):
             'is_2d': '2D',
             'is_imax': 'IMAX'
         }
+
+
+class BannerForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'BannerModel')
+        fields = ['is_active', 'rotation_speed']
+        widgets = {
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            }),
+            'rotation_speed': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'col': '3'
+            })
+        }
+        labels = {
+            'rotation_speed': 'Скорость вращения',
+        }
+
+
+class BackgroundBannerForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(BackgroundBannerForm, self).__init__(*args, **kwargs)
+        self.fields['image'].required = False
+        self.fields['color'].required = False
+
+    class Meta:
+        model = apps.get_model('cinema', 'BackgroundBannerModel')
+        fields = ['image', 'mode', 'color']
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'data-jscolor': '{}',
+            }),
+            'mode': forms.RadioSelect(attrs={
+                'onclick': 'change_background()',
+            })
+        }
+
+
+MainBannerFormset = modelformset_factory(model=apps.get_model('cinema', 'ImageModel'), form=ImageForm,
+                                         fields=('image', 'url', 'text',), extra=0, can_delete=True)
+NewsBannerFormset = modelformset_factory(model=apps.get_model('cinema', 'ImageModel'), form=ImageForm,
+                                         fields=('image', 'url',), extra=0, can_delete=True)
+MainBannerFormset.deletion_widget = HiddenInput
+NewsBannerFormset.deletion_widget = HiddenInput
