@@ -1,7 +1,9 @@
 import os
 
 from django.conf.global_settings import MEDIA_ROOT
+from django.core.exceptions import ValidationError
 from django.db import models
+from colorfield.fields import ColorField
 
 
 class SeoModel(models.Model):
@@ -9,6 +11,7 @@ class SeoModel(models.Model):
     seo_title = models.CharField(max_length=50)
     seo_keywords = models.CharField(max_length=100)
     seo_description = models.TextField()
+
     # seo_text = models.TextField() FIXME seo_text оставить в page
 
     def __str__(self):
@@ -22,6 +25,8 @@ class GalleryModel(models.Model):
 class ImageModel(models.Model):
     gallery = models.ForeignKey('GalleryModel', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'gallery'))
+    url = models.URLField()
+    text = models.CharField(max_length=50)
 
 
 class CinemaModel(models.Model):
@@ -136,3 +141,18 @@ class ArticleModel(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BackgroundBannerModel(models.Model):
+    mode = models.CharField(max_length=20, choices=[('Фото на фоне', 'Фото на фоне'), ("Просто фон", "Просто фон")],
+                            default="Просто фон")
+    image = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'banners', 'background'), null=True,
+                              default=None)
+    color = ColorField()
+
+
+class BannerModel(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    gallery = models.ForeignKey('GalleryModel', on_delete=models.CASCADE, null=True)
+    is_active = models.BooleanField(default=False)
+    rotation_speed = models.PositiveSmallIntegerField(null=True)
