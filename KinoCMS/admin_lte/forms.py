@@ -330,7 +330,7 @@ class ContactForm(forms.ModelForm):
         fields = ['title', 'address', 'coordinates', 'is_active', 'logo']
         widgets = {
             'title': forms.TextInput(attrs={
-               'class': 'form-control'
+                'class': 'form-control'
             }),
             'address': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -359,3 +359,32 @@ ContactFormset = modelformset_factory(model=apps.get_model('cinema', 'ContactMod
                                       fields=('title', 'address', 'coordinates', 'is_active', 'logo'), extra=0,
                                       can_delete=True)
 ContactFormset.deletion_widget = HiddenInput
+
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'ArticleModel')
+        fields = ['title', 'description', 'banner', 'is_active', 'url', 'publication']
+        widgets = {
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            }),
+            'title': forms.TextInput(attrs={
+                'class': 'control-input'
+            }),
+            'publication': forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'class': 'form-control',
+                    'type': 'date'
+                }),
+            'banner': forms.FileInput()
+        }
+        labels = {
+            'title': 'Название',
+            'description': 'Описание',
+            'banner': 'Главная картинка',
+        }

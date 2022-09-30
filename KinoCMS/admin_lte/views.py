@@ -8,7 +8,8 @@ from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
 from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset, HallForm, BackgroundBannerForm, \
-    BannerForm, MainBannerFormset, NewsBannerFormset, PageForm, MainPageForm, ContactFormset, ContactsPageForm
+    BannerForm, MainBannerFormset, NewsBannerFormset, PageForm, MainPageForm, ContactFormset, ContactsPageForm, \
+    ArticleForm
 
 
 def admin_statistic(request):
@@ -649,4 +650,145 @@ def edit_contact_view(request):
     }
     return render(request, 'admin_lte/cinema/contact_edit.html', context)
 
+
 # ____________________Pages____________________ #
+
+# ____________________Articles____________________ #
+
+class AdminArticleView(ListView):
+    template_name = 'admin_lte/cinema/article_list.html'
+    model = apps.get_model('cinema', 'ArticleModel')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        path = self.request.META.get('PATH_INFO', None)
+
+        context['admin_edit_article'] = 'admin_edit_article'
+        context['admin_delete_article'] = 'admin_delete_article'
+
+        if path == '/admin/promo/':
+            context['title'] = 'Список акций'
+            context['article_list'] = self.model.objects.filter(mode='PROMO').order_by('-pk')
+        else:
+            context['title'] = 'Список новостей'
+            context['article_list'] = self.model.objects.filter(mode='NEWS').order_by('-pk')
+
+        return context
+
+
+def add_article_view(request):
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+    gallery_query_set = gallery_model.objects.none()
+
+    article = ArticleForm(request.POST or None, request.FILES or None)
+    seo = SeoForm(request.POST or None)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+    if request.path == '/admin/promo/add/':
+        mode = 'PROMO'
+        title = 'Создать акцию'
+    else:
+        mode = 'NEWS'
+        title = 'Создать новость'
+
+    if request.method == 'POST':
+        if article.is_valid() and seo.is_valid() and formset.is_valid():
+            article.save(commit=False)
+            gallery = gallery_model.objects.create(title=article.cleaned_data['title'])
+            gallery.save()
+            for form in formset:
+                if form.instance.image:
+                    form.save(commit=False)
+                    form.instance.gallery = gallery
+                    form.save()
+            article.instance.gallery = gallery
+            article.instance.mode = mode
+            seo.save()
+            article.instance.seo = seo.instance
+            article.save()
+            if mode == 'PROMO':
+                return redirect('admin_promo')
+            else:
+                return redirect('admin_news')
+    context = {
+        'form': article,
+        'seo': seo,
+        'formset': formset,
+        'title': title
+    }
+    return render(request, 'admin_lte/cinema/article_add.html', context=context)
+
+
+def edit_article_view(request, pk):
+    page_model = apps.get_model('cinema', 'ArticleModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
+    article_object = get_object_or_404(page_model, pk=pk)
+    gallery_object = get_object_or_404(gallery_model, pk=article_object.gallery.pk)
+    gallery_query_set = gallery_object.imagemodel_set.all()
+
+    article = ArticleForm(request.POST or None, request.FILES or None, instance=article_object)
+    seo = SeoForm(request.POST or None, request.FILES or None, instance=article_object.seo)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+    if article_object.mode == 'PROMO':
+        mode = 'PROMO'
+        title = 'Редактировать акцию'
+    else:
+        mode = 'NEWS'
+        title = 'Редактировать новость'
+
+    if request.method == 'POST':
+        if article.is_valid() and seo.is_valid() and formset.is_valid():
+            formset.save(commit=False)
+            for i in formset.new_objects:
+                i.gallery = gallery_object
+                i.save()
+            formset.save()
+            seo.save()
+            article.instance.seo = seo.instance
+            article.save()
+
+            if mode == 'PROMO':
+                return redirect('admin_promo')
+            else:
+                return redirect('admin_news')
+    context = {
+        'form': article,
+        'seo': seo,
+        'formset': formset,
+        'title': title
+    }
+    return render(request, 'admin_lte/cinema/article_edit.html', context)
+
+
+class DeleteArticleView(DeleteView):
+    model = apps.get_model('cinema', 'ArticleModel')
+    seo_model = apps.get_model('cinema', 'SeoModel')
+    template_name = 'admin_lte/cinema/article_delete.html'
+    success_url = reverse_lazy('admin_promo')
+
+    def get_success_url(self):
+        mode = self.object.mode
+        if mode == 'POST':
+            return reverse_lazy('admin_promo')
+        else:
+            return reverse_lazy('admin_news')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        mode = self.object.mode
+        context['form'] = self.model.objects.get(pk=self.kwargs['pk'])
+        if mode == 'POST':
+            context['title'] = 'Удалить акцию'
+        else:
+            context['title'] = 'Удалить новость'
+        return context
+
+    def form_valid(self, form):
+        seo = self.seo_model.objects.get(pk=self.object.seo.pk)
+        self.object.delete()
+        seo.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+# ____________________Articles____________________ #

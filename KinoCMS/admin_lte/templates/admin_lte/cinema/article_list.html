@@ -1,0 +1,43 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load admin_lte_tags %}
+{% block content %}
+<div class="d-flex flex-row-reverse mb-3">
+    {% if request.path == '/admin/promo/' %}
+    {% add_button 'admin_add_promo' %}
+    {% else %}
+    {% add_button 'admin_add_news' %}
+    {% endif %}
+</div>
+<table id="table" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Название</th>
+        <th>Дата создания</th>
+        <th width="80">Статус</th>
+        <th width="40"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for article in article_list %}
+    <tr>
+        <td>{{ article.title }}</td>
+        <td>{{ article.time_create }}</td>
+        <td>
+            {% if article.is_active == True %}
+            ВКЛ
+            {% else %}
+            ВЫКЛ
+            {% endif %}
+        </td>
+        <td>
+            {% if article_list %}
+            {% table_buttons admin_edit_article admin_delete_article article.pk %}
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}

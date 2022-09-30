@@ -1,0 +1,23 @@
+{% extends 'admin_lte/base/base.html' %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <p>Вы хотите удалить {{ form.title }}?</p>
+    <div class="d-flex">
+        {% if request.path == '/admin/promo/' %}
+        <a href="{% url 'admin_promo' %}">
+            <button type="button" class="btn btn-secondary mr-3">Отменить</button>
+        </a>
+        {% else %}
+        <a href="{% url 'admin_news' %}">
+            <button type="button" class="btn btn-secondary mr-3">Отменить</button>
+        </a>
+        {% endif %}
+        <button onclick="return confirm('Вы хотите удалить {{ form.title }}?');" type="submit" class="btn btn-danger">
+            Удалить
+        </button>
+    </div>
+</form>
+
+{% endblock %}

@@ -145,9 +145,10 @@ class ArticleModel(models.Model):
 
     title = models.CharField(max_length=50)
     description = models.TextField()
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     url = models.URLField()
     publication = models.DateField(db_index=True)
+    time_create = models.DateTimeField(auto_now_add=True)
     mode = models.CharField(max_length=10, choices=Mode.choices)
     banner = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'articles', 'banners'))
     gallery = models.ForeignKey('GalleryModel', on_delete=models.CASCADE, null=True)

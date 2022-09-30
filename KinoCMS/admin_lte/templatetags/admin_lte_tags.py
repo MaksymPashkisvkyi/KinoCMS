@@ -29,8 +29,8 @@ def show_side_menu():
         {'title': "Баннера/Слайдеры", 'url': "admin_banner"},
         {'title': "Фильмы", 'url': "admin_film"},
         {'title': "Кинотеатры", 'url': "admin_cinema"},
-        {'title': "Новости#", 'url': "admin_statistic"},
-        {'title': "Акции#", 'url': "admin_statistic"},
+        {'title': "Новости", 'url': "admin_news"},
+        {'title': "Акции", 'url': "admin_promo"},
         {'title': "Страницы", 'url': "admin_pages"},
         {'title': "Пользователи", 'url': "admin_user"},
         {'title': "Рассылка#", 'url': "admin_statistic"}
