@@ -1,0 +1,178 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% load static %}
+{% block content %}
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="d-flex flex-row-reverse mb-5">
+        {{ contacts_page_form.is_active }}
+    </div>
+    <div id="contact-formset">
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <div id="{{ form.prefix }}-form" class="card">
+            <div class="card-body">
+                {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+                {% endfor %}
+                <div class="d-flex flex-row-reverse">
+                    <a id="{{ form.prefix }}" onclick="delete_contact(this.id)">
+                        <button type="button" class="close btn-form-delete" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </a>
+                </div>
+
+                <div class="form-row d-flex flex-row-reverse">
+                    {{ form.is_active }}
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Название кинотеатра:</span></div>
+                    {{ form.title }}
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Адресс:</span></div>
+                    {{ form.address }}
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Координаты для карты:</span></div>
+                    {{ form.coordinates }}
+                </div>
+
+                <!--Logo-->
+                <div class="form-row my-3">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Лого:</span></div>
+                    <div class="col-md-3 col-6 offset-md-2 mr-5">
+
+                        {% if form.instance.logo.url != null %}
+                        <img id="{{ form.prefix }}-logo"
+                             class="img-fluid form-img-preview"
+                             src="{{ form.instance.logo.url }}">
+                        {% else %}
+                        <img id="{{ form.prefix }}-logo"
+                             class="img-fluid form-img-preview"
+                             src="{% static 'cinema/dist/img/preview_upload.png' %}">
+                        {% endif %}
+
+
+                        <!--<img id="{{ form.prefix }}-logo"
+                             class="img-fluid form-img-preview"
+                             src="{ form.instance.logo.url }}">-->
+                    </div>
+                    <div class="row btn-group-img-control">
+                        <div class="col-md-1">
+                            <button name="{{ form.prefix }}"
+                                    type="button"
+                                    onchange="preview_contact_logo(name)"
+                                    class="btn btn-upload btn-outline-success btn-file btn-img-control">
+                                <span>Загрузить</span>
+                                {{ form.logo }}
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button name="logo"
+                                    type="button"
+                                    onclick="deletePreview(name, event)"
+                                    class="btn btn-upload btn-outline-danger btn-file btn-img-control">
+                                <span>Удалить</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--End Logo-->
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="contact-empty_form" class="d-none">
+        <div id="form-__prefix__-form" class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row-reverse">
+                    <a id="form-__prefix__" onclick="delete_contact(this.id)">
+                        <button type="button" class="close btn-form-delete" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </a>
+                </div>
+                <div class="form-row d-flex flex-row-reverse">
+                    <input type="checkbox" name="contact-__prefix__-is_active" id="id_contact-__prefix__-is_active"
+                           data-toggle="toggle"
+                           data-onstyle="outline-success" data-offstyle="outline-danger" data-size="sm">
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Название кинотеатра:</span></div>
+                    <input type="text" name="contact-__prefix__-title" placeholder="Название кинотеатра" maxlength="50"
+                           id="id_contact-__prefix__-title" class="form-control">
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Адресс:</span></div>
+                    <textarea name="contact-__prefix__-address" rows="5" id="id_contact-__prefix__-address"
+                              class="form-control"></textarea>
+                </div>
+
+                <div class="form-row d-flex mb-3 col-md-6">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Координаты для карты:</span></div>
+                    <input type="text" name="contact-__prefix__-coordinates" class="form-control" maxlength="100"
+                           id="id_contact-__prefix__-coordinates">
+                </div>
+
+                <!--Logo-->
+                <div class="form-row my-3">
+                    <div class="col-md-12 mb-3"><span class="font-weight-bold">Лого:</span></div>
+                    <div class="col-md-3 col-6 offset-md-2 mr-5">
+                        <img id="contact-__prefix__-logo"
+                             class="img-fluid form-img-preview"
+                             src="{% static 'cinema/dist/img/preview_upload.png' %}">
+                    </div>
+                    <div class="row btn-group-img-control">
+                        <div class="col-md-1">
+                            <button name="contact-__prefix__"
+                                    type="button"
+                                    onchange="preview_contact_logo(name)"
+                                    class="btn btn-upload btn-outline-success btn-file btn-img-control">
+                                <span>Загрузить</span>
+                                <input type="file" name="contact-__prefix__-logo" accept="image/*"
+                                       id="id_contact-__prefix__-logo">
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button name="logo"
+                                    type="button"
+                                    onclick="deletePreview(name, event)"
+                                    class="btn btn-upload btn-outline-danger btn-file btn-img-control">
+                                <span>Удалить</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--End Logo-->
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-row d-flex justify-content-center">
+        <button type="button" class="btn btn-success" id="add_contact">Добавить</button>
+    </div>
+
+    <hr class="my-5">
+    {% show_form_seo seo %}
+    <hr class="my-5">
+    <div class="d-flex">
+        <a href="{% url 'admin_pages' %}">
+            <button type="button" class="btn btn-secondary">Отменить</button>
+        </a>
+        <button type="submit" class="btn btn-primary mx-3">Сохранить</button>
+        <button type="reset" class="btn btn-primary ml-auto" disabled>Очистить</button>
+    </div>
+</form>
+{% endblock %}

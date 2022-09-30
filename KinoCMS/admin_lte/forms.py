@@ -262,3 +262,100 @@ NewsBannerFormset = modelformset_factory(model=apps.get_model('cinema', 'ImageMo
                                          fields=('image', 'url',), extra=0, can_delete=True)
 MainBannerFormset.deletion_widget = HiddenInput
 NewsBannerFormset.deletion_widget = HiddenInput
+
+
+class MainPageForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'MainPageModel')
+        fields = ['phone1', 'phone2', 'seo_text', 'is_active']
+        widgets = {
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            }),
+            'seo_text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+            }),
+        }
+        labels = {
+            'phone1': '',
+            'phone2': '',
+            'seo_text': 'SEO текст',
+        }
+
+
+class ContactsPageForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'ContactsPageModel')
+        fields = ['is_active']
+        widgets = {
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            })
+        }
+
+
+class PageForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'PageModel')
+        fields = ['title', 'description', 'banner', 'is_active']
+        widgets = {
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            }),
+            'title': forms.TextInput(attrs={
+                'class': 'control-input'
+            }),
+            'banner': forms.FileInput()
+        }
+        labels = {
+            'title': 'Название',
+            'description': 'Описание',
+            'banner': 'Главная картинка',
+        }
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = apps.get_model('cinema', 'ContactModel')
+        fields = ['title', 'address', 'coordinates', 'is_active', 'logo']
+        widgets = {
+            'title': forms.TextInput(attrs={
+               'class': 'form-control'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5
+            }),
+            'coordinates': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'outline-success',
+                'data-offstyle': 'outline-danger',
+                'data-size': 'sm',
+            }),
+            'logo': forms.FileInput()
+        }
+        labels = {
+            'title': 'Название кинотеатра',
+            'address': 'Адресс',
+            'coordinates': 'Координаты для карты',
+            'logo': 'Лого',
+        }
+
+
+ContactFormset = modelformset_factory(model=apps.get_model('cinema', 'ContactModel'), form=ContactForm,
+                                      fields=('title', 'address', 'coordinates', 'is_active', 'logo'), extra=0,
+                                      can_delete=True)
+ContactFormset.deletion_widget = HiddenInput

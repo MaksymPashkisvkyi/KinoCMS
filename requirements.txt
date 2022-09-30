@@ -6,15 +6,16 @@ distlib==0.3.6
 Django==4.1
 django-bootstrap4==22.2
 django-cleanup==6.0.0
+django-colorfield==0.7.2
 django-crispy-forms==1.14.0
 django-debug-toolbar==3.6.0
+django-phonenumber-field==7.0.0
 filelock==3.8.0
 flake8==5.0.4
 identify==2.5.3
 isort==5.10.1
 mccabe==0.7.0
 nodeenv==1.7.0
-phonenumbers==8.12.54
 Pillow==9.2.0
 platformdirs==2.5.2
 pre-commit==2.20.0

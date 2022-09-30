@@ -1,9 +1,9 @@
 import os
 
-from django.conf.global_settings import MEDIA_ROOT
-from django.core.exceptions import ValidationError
-from django.db import models
 from colorfield.fields import ColorField
+from django.conf.global_settings import MEDIA_ROOT
+from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class SeoModel(models.Model):
@@ -11,8 +11,6 @@ class SeoModel(models.Model):
     seo_title = models.CharField(max_length=50)
     seo_keywords = models.CharField(max_length=100)
     seo_description = models.TextField()
-
-    # seo_text = models.TextField() FIXME seo_text оставить в page
 
     def __str__(self):
         return self.seo_title
@@ -97,13 +95,22 @@ class TicketModel(models.Model):
         return f"Биллет {self.client}"
 
 
+class MainPageModel(models.Model):
+    title = models.CharField(max_length=50, default='Main')
+    is_active = models.BooleanField(default=False)
+    time_create = models.DateTimeField(auto_now_add=True)
+    phone1 = PhoneNumberField(blank=True, null=True)
+    phone2 = PhoneNumberField(blank=True, null=True)
+    seo_text = models.TextField(null=True)
+    seo = models.OneToOneField('SeoModel', on_delete=models.CASCADE, null=True)
+
+
 class PageModel(models.Model):
     title = models.CharField(max_length=50)
-    description = models.TextField()
-    phone1 = models.CharField(max_length=20)
-    phone2 = models.CharField(max_length=20)
-    is_active = models.BooleanField(default=True)
-    banner = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'pages', 'banners'))
+    description = models.TextField(null=True)
+    is_active = models.BooleanField(default=False)
+    time_create = models.DateTimeField(auto_now_add=True)
+    banner = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'pages', 'banners'), null=True)
     gallery = models.ForeignKey('GalleryModel', on_delete=models.CASCADE, null=True)
     seo = models.OneToOneField('SeoModel', on_delete=models.CASCADE)
 
@@ -111,14 +118,21 @@ class PageModel(models.Model):
         return self.title
 
 
-class ContactModel(models.Model):
+class ContactsPageModel(models.Model):
     title = models.CharField(max_length=50)
-    address = models.TextField()
-    coordinates = models.TextField()
-    is_active = models.BooleanField(default=True)
     time_create = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=False)
+    seo = models.OneToOneField('SeoModel', on_delete=models.CASCADE, null=True)
+
+
+class ContactModel(models.Model):
+    contacts_page = models.ForeignKey('ContactsPageModel', on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=50)
+    address = models.TextField(blank=True)
+    coordinates = models.CharField(max_length=100, blank=True)
+    is_active = models.BooleanField(default=False)
     logo = models.ImageField(upload_to=os.path.join(MEDIA_ROOT, 'images', 'contacts', 'logos'))
-    seo = models.OneToOneField('SeoModel', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

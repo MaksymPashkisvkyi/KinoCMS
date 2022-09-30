@@ -1,0 +1,100 @@
+{% extends 'admin_lte/base/base.html' %}
+{% load crispy_forms_tags %}
+{% load admin_lte_tags %}
+{% load static %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row d-flex flex-row-reverse">
+        {{ form.is_active }}
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.title|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            {{ form.description|as_crispy_field }}
+        </div>
+    </div>
+    <!--Banner-->
+    <div class="form-row my-3">
+        <div class="col-md-12 mb-3"><span class="font-weight-bold">{{ form.banner.label }}*:</span></div>
+        <div class="col-md-3 col-6 offset-md-2 mr-5">
+            <img id="banner_preview"
+                 class="img-fluid form-img-preview"
+                 src="{% static 'cinema/dist/img/preview_upload.png' %}">
+        </div>
+        <div class="row btn-group-img-control">
+            <div class="col-md-1">
+                <button name="banner"
+                        type="button"
+                        onchange="showPreview(name, event)"
+                        class="btn btn-upload btn-outline-success btn-file btn-img-control">
+                    <span>Загрузить</span>
+                    {{ form.banner }}
+                </button>
+            </div>
+            <div class="col-md-1">
+                <button name="banner"
+                        type="button"
+                        onclick="deletePreview(name, event)"
+                        class="btn btn-upload btn-outline-danger btn-file btn-img-control">
+                    <span>Удалить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--End Banner-->
+    <hr class="my-5">
+    <!--GALLERY-->
+    <div id="gallery" class="form-gallery">
+        <div class="col-md-12 mb-3"><span class="font-weight-bold">Галерея:</span></div>
+        <div id="form_set" class="mb-5">
+            {{ formset.management_form }}
+            {% for form in formset %}
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+            {% endfor %}
+            {% endfor %}
+        </div>
+        <div id="empty_form" class="d-none">
+            <div id="form-__prefix__-form" style="display: inline-block">
+                <a id="form-__prefix__" onclick="delete_image(this.id)">
+                    <button type="button" class="close btn-form-delete" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </a>
+                <input type="hidden" name="form-__prefix__-id" id="id_form-__prefix__-id">
+                <div class="text-center">
+                    <img id="form-__prefix__-image"
+                         class="form-gallery-img"
+                         src="{% static 'cinema/dist/img/preview_upload.png' %}">
+                </div>
+                <div class="text-center">
+                    <a id="form-__prefix__"
+                       onchange="preview_gallery(this.id)"
+                       class="btn btn-outline-success btn-file btn-gallery-load">
+                        <span>Загрузить</span>
+                        <input type="file" name="form-__prefix__-image" accept="image/*" id="id_form-__prefix__-image">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-block btn-success ml-5 btn-gallery-add" id="add_img">Добавить</button>
+        </div>
+    </div>
+    <hr class="my-5">
+    {% show_form_seo seo %}
+    <hr class="my-5">
+    <div class="d-flex">
+        <a href="{% url 'admin_pages' %}">
+            <button type="button" class="btn btn-secondary">Отменить</button>
+        </a>
+        <button type="submit" class="btn btn-primary mx-3">Сохранить</button>
+        <button type="reset" class="btn btn-primary ml-auto" disabled>Очистить</button>
+    </div>
+</form>
+{% endblock %}

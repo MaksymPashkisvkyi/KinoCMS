@@ -8,7 +8,7 @@ from django.views.generic import (CreateView, DeleteView, TemplateView,
                                   UpdateView, ListView)
 
 from .forms import UserForm, CinemaForm, SeoForm, FilmForm, PhotoInlineFormset, HallForm, BackgroundBannerForm, \
-    BannerForm, MainBannerFormset, NewsBannerFormset
+    BannerForm, MainBannerFormset, NewsBannerFormset, PageForm, MainPageForm, ContactFormset, ContactsPageForm
 
 
 def admin_statistic(request):
@@ -488,4 +488,165 @@ def banners_view(request):
     }
     return render(request, 'admin_lte/cinema/banners.html', context)
 
+
 # ____________________Banners____________________ #
+
+
+# ____________________Pages____________________ #
+
+class AdminPageView(ListView):
+    template_name = 'admin_lte/cinema/page_list.html'
+    model = apps.get_model('cinema', 'PageModel')
+    main_page_model = apps.get_model('cinema', 'MainPageModel')
+    contacts_page_model = apps.get_model('cinema', 'ContactsPageModel')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'Список страниц'
+        context['admin_edit_page'] = 'admin_edit_page'
+        context['admin_delete_page'] = 'admin_delete_page'
+        context['main_page'], _ = self.main_page_model.objects.get_or_create(title='Главная страница')
+        context['contacts'], _ = self.contacts_page_model.objects.get_or_create(title='Контакты')
+        context['page_list'] = self.model.objects.order_by('-pk')
+        return context
+
+
+def add_page_view(request):
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+    gallery_query_set = gallery_model.objects.none()
+
+    page = PageForm(request.POST or None, request.FILES or None)
+    seo = SeoForm(request.POST or None)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+    if request.method == 'POST':
+        if page.is_valid() and seo.is_valid() and formset.is_valid():
+            page.save(commit=False)
+            gallery = gallery_model.objects.create(title=page.cleaned_data['title'])
+            gallery.save()
+            for form in formset:
+                if form.instance.image:
+                    form.save(commit=False)
+                    form.instance.gallery = gallery
+                    form.save()
+            page.instance.gallery = gallery
+            seo.save()
+            page.instance.seo = seo.instance
+            page.save()
+            return redirect('admin_pages')
+
+    context = {
+        'form': page,
+        'seo': seo,
+        'formset': formset,
+        'title': 'Добавить страницу'
+    }
+    return render(request, 'admin_lte/cinema/page_add.html', context=context)
+
+
+def edit_page_view(request, pk):
+    page_model = apps.get_model('cinema', 'PageModel')
+    gallery_model = apps.get_model('cinema', 'GalleryModel')
+
+    page_object = get_object_or_404(page_model, pk=pk)
+    gallery_object = get_object_or_404(gallery_model, pk=page_object.gallery.pk)
+    gallery_query_set = gallery_object.imagemodel_set.all()
+
+    page = PageForm(request.POST or None, request.FILES or None, instance=page_object)
+    seo = SeoForm(request.POST or None, request.FILES or None, instance=page_object.seo)
+    formset = PhotoInlineFormset(request.POST or None, request.FILES or None, queryset=gallery_query_set)
+
+    if request.method == 'POST':
+        if page.is_valid() and seo.is_valid() and formset.is_valid():
+            formset.save(commit=False)
+            for i in formset.new_objects:
+                i.gallery = gallery_object
+                i.save()
+            formset.save()
+            seo.save()
+            page.instance.seo = seo.instance
+            page.save()
+            return redirect('admin_pages')
+
+    context = {
+        'form': page,
+        'seo': seo,
+        'formset': formset,
+        'title': 'Cоздание страницы'
+    }
+    return render(request, 'admin_lte/cinema/page_edit.html', context)
+
+
+class DeletePageView(DeleteView):
+    model = apps.get_model('cinema', 'PageModel')
+    seo_model = apps.get_model('cinema', 'SeoModel')
+    success_url = reverse_lazy('admin_pages')
+    template_name = 'admin_lte/cinema/page_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['form'] = self.model.objects.get(pk=self.kwargs['pk'])
+        context['title'] = 'Удалить страницу'
+        return context
+
+    def form_valid(self, form):
+        seo = self.seo_model.objects.get(pk=self.object.seo.pk)
+        self.object.delete()
+        seo.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def edit_main_page_view(request, pk):
+    main_page_model = apps.get_model('cinema', 'MainPageModel')
+    main_page_object = get_object_or_404(main_page_model, pk=pk)
+
+    main_page = MainPageForm(request.POST or None, request.FILES or None, instance=main_page_object)
+    seo = SeoForm(request.POST or None, request.FILES or None, instance=main_page_object.seo)
+
+    if request.method == 'POST':
+        if main_page.is_valid() and seo.is_valid():
+            seo.save()
+            main_page.instance.seo = seo.instance
+            main_page.save()
+            return redirect('admin_pages')
+    context = {
+        'form': main_page,
+        'seo': seo,
+        'title': 'Главная страница'
+    }
+    return render(request, 'admin_lte/cinema/main_page_edit.html', context)
+
+
+def edit_contact_view(request):
+    contacts_page_model = apps.get_model('cinema', 'ContactsPageModel')
+    contact_model = apps.get_model('cinema', 'ContactModel')
+
+    contact_query_set = contact_model.objects.all()
+    contacts_page_object = contacts_page_model.objects.get(title='Контакты')
+
+    seo = SeoForm(request.POST or None, instance=contacts_page_object.seo)
+    contacts_page_form = ContactsPageForm(request.POST or None, instance=contacts_page_object)
+    formset = ContactFormset(request.POST or None, request.FILES or None, queryset=contact_query_set, prefix='contact')
+
+    if request.method == 'POST':
+        if seo.is_valid() and formset.is_valid() and contacts_page_form.is_valid():
+
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.contacts_page = contacts_page_object
+                instance.save()
+            formset.save()
+
+            seo.save()
+            contacts_page_form.instance.seo = seo.instance
+            contacts_page_form.save()
+            return redirect('admin_pages')
+    context = {
+        'contacts_page_form': contacts_page_form,
+        'seo': seo,
+        'formset': formset,
+        'title': 'Редактировать контакты'
+    }
+    return render(request, 'admin_lte/cinema/contact_edit.html', context)
+
+# ____________________Pages____________________ #

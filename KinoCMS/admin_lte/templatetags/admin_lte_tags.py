@@ -31,7 +31,7 @@ def show_side_menu():
         {'title': "Кинотеатры", 'url': "admin_cinema"},
         {'title': "Новости#", 'url': "admin_statistic"},
         {'title': "Акции#", 'url': "admin_statistic"},
-        {'title': "Страницы#", 'url': "admin_statistic"},
+        {'title': "Страницы", 'url': "admin_pages"},
         {'title': "Пользователи", 'url': "admin_user"},
         {'title': "Рассылка#", 'url': "admin_statistic"}
     ]

@@ -5,7 +5,8 @@ from .views import (AddUserView,
                     AdminUserView, DeleteCinemaView, DeleteFilmView,
                     DeleteHallView, DeleteUserView,
                     EditUserView, admin_statistic, add_cinema_view, add_film_view, add_hall_view,
-                    edit_cinema_view, edit_film_view, edit_hall_view, banners_view)
+                    edit_cinema_view, edit_film_view, edit_hall_view, banners_view, AdminPageView, add_page_view,
+                    edit_page_view, DeletePageView, edit_main_page_view, edit_contact_view)
 
 urlpatterns = [
     path('', admin_statistic, name='admin_statistic'),
@@ -30,4 +31,12 @@ urlpatterns = [
     path('add_film/', add_film_view, name='admin_add_film'),
     path('edit_film/<int:pk>/', edit_film_view, name='admin_edit_film'),
     path('delete_film/<int:pk>/', DeleteFilmView.as_view(), name='admin_delete_film'),
+
+    path('pages/', AdminPageView.as_view(), name='admin_pages'),
+    path('add_page/', add_page_view, name='admin_add_page'),
+    path('edit_page/<int:pk>/', edit_page_view, name='admin_edit_page'),
+    path('delete_page/<int:pk>/', DeletePageView.as_view(), name='admin_delete_page'),
+
+    path('edit_main_page/<int:pk>/', edit_main_page_view, name='admin_edit_main_page'),
+    path('edit_contact/', edit_contact_view, name='admin_edit_contact'),
 ]
